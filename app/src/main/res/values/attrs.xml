@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<declare-styleable name="ColorPreference">
+		<attr name="aRes" format="integer"/>
+		<attr name="hRes" format="integer"/>
+		<attr name="sRes" format="integer"/>
+		<attr name="vRes" format="integer"/>
+		<attr name="Res" format="integer"/>
+		</declare-styleable>
+	<declare-styleable name="ColorThemePreference">
+		<attr name="cGrade" format="reference"/>
+	</declare-styleable>
+</resources>

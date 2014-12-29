@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="bitmap_width">294dp</dimen>
+	<dimen name="bitmap_height">294dp</dimen>
+	<dimen name="pad">14dp</dimen>
+	<dimen name="dash_fill">0.6dp</dimen>
+	<dimen name="dash_space">3.6dp</dimen>
+	<dimen name="c_frame_thickness">1.5dp</dimen>
+	<dimen name="pointer_thickness">0.15dp</dimen>
+	<dimen name="zmanimMaxTextWidth">33dp</dimen>
+
+</resources>

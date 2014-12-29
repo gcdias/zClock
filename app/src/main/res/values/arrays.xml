@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="short_shemot">
+		<item>15XXlNeVDQrXmdec15kNCteh15nXmA0K16LXnNeeDQrXnteU16kNCtec15zXlA0K15DXm9eQDQrXm9eU16oNCteU15bXmQ0K15DXnNeTDQrXnNeQ15UNCteU15TXog0K15nXltecDQrXnteR15QNCteU16jXmQ0K15TXp9eeDQrXnNeQ15UNCteb15zXmQ0K15zXldeVDQrXpNeU15wNCteg15zXmw0K15nXmdeZDQrXntec15QNCteX15TXlQ0K16DXqteUDQrXlNeQ15ANCteZ16jXqg0K16nXkNeUDQrXqNeZ15kNCteQ15XXng0K15zXm9eRDQrXldep16gNCteZ15fXlQ0K15zXlNeXDQrXm9eV16cNCtee16DXkw0K15DXoNeZDQrXl9ei154NCteo15TXog0K15nXmdeWDQrXlNeU15QNCtee15nXmw0K15XXldecDQrXmdec15QNCteh15DXnA0K16LXqNeZDQrXotep15wNCtee15nXlA0K15XXlNeVDQrXk9eg15kNCteU15fXqQ0K16LXnteeDQrXoNeg15ANCteg15nXqg0K157XkdeUDQrXpNeV15kNCteg157Xng0K15nXmdecDQrXlNeo15cNCtee16bXqA0K15XXnteRDQrXmdeU15QNCtei16DXlQ0K157Xl9eZDQrXk9ee15ENCtee16DXpw0K15DXmdeiDQrXl9eR15UNCteo15DXlA0K15nXkdeeDQrXlNeZ15kNCtee15XXng==</item>
+		<item>15XXlNeVDQrXmdec15kNCteh15nXmA0K16LXnNeeDQrXnteU16kNCtec15zXlA0K15DXm9eQDQrXmteU16oNCteU15bXmQ0K15DXnNeTDQrXnNeQ15UNCteU15TXog0K15nXltecDQrXndeR15QNCteU16jXmQ0K15TXp9edDQrXnNeQ15UNCtea15zXmQ0K15zXldeVDQrXpNeU15wNCteg15zXmg0K15nXmdeZDQrXntec15QNCteX15TXlQ0K16DXqteUDQrXlNeQ15ANCteZ16jXqg0K16nXkNeUDQrXqNeZ15kNCteQ15XXnQ0K15zXmteRDQrXldep16gNCteZ15fXlQ0K15zXlNeXDQrXmteV16cNCtee15/Xkw0K15DXoNeZDQrXl9ei150NCteo15TXog0K15nXmdeWDQrXlNeU15QNCted15nXmw0K15XXldecDQrXmdec15QNCteh15DXnA0K16LXqNeZDQrXotep15wNCtee15nXlA0K15XXlNeVDQrXk9eg15kNCteU15fXqQ0K16LXntedDQrXoNeg15ANCtef15nXqg0K157XkdeUDQrXpNeV15kNCteg153XnQ0K15nXmdecDQrXlNeo15cNCted16bXqA0K15XXnteRDQrXmdeU15QNCtei16DXlQ0K157Xl9eZDQrXk9ee15ENCtee15/Xpw0K15DXmdeiDQrXl9eR15UNCteo15DXlA0K15nXkdeeDQrXlNeZ15kNCted15XXnQ==</item>
+	</string-array>
+	<string-array name="long_shemot">
+		<item>15XWt9eZ1rzWtNeh1rzWt9eiINee1rfXnNaw15DWt9ea1rAg15TWuNeQ1rHXnNa515TWtNeZ150sINeU1rfXlNa515zWtdea1rAg15zWtNek1rDXoNa115kg157Wt9eX1rLXoNa115Qg15nWtNep14LWsNeo1rjXkNa115wsINeV1rfXmda81rXXnNa215rWsCwg157WtdeQ1rfXl9ay16jWtdeZ15TWttedOyDXlda315nWvNa016HWvNa316Ig16LWt9ee1rzXlda815Mg15TWttei1rjXoNa4158sINee1rTXpNa81rDXoNa115nXlNa2150sINeV1rfXmda81rfXotay157WudeTLCDXnta115DWt9eX1rLXqNa115nXlNa2150uDQrXlda315nWvNa415HWudeQINeR1rzWtdeZ158g157Wt9eX1rLXoNa115Qg157WtNem1rDXqNa315nWtNedLCDXlda815HWtdeZ158g157Wt9eX1rLXoNa115Qg15nWtNep14LWsNeo1rjXkNa115wsINeV1rfXmdaw15TWtNeZINeU1rbXota416DWuNefINeV1rDXlNa315fWudep14HWttea1rAsINeV1rfXmda81rjXkNa216gg15DWtteqLdeU1rfXnNa81rjXmdaw15zWuNeUOyDXldaw15zWudeQLden1rjXqNa315Eg15bWtteUINeQ1rbXnC3Xlta215QsINeb1rzWuNecLdeU1rfXnNa81rjXmdaw15zWuNeULg0K15XWt9eZ1rzWtdeYINee1rnXqdeB1rbXlCDXkNa216ot15nWuNeT15XWuSwg16LWt9ecLdeU1rfXmda81rjXnSwg15XWt9eZ1rzXlda515zWttea1rAg15nWsNeU15XWuNeUINeQ1rbXqi3XlNa315nWvNa4150g15HWvNaw16jXlda815fWtyDXp9a415PWtNeZ150g16LWt9eW1rzWuNeUINeb1rzWuNecLdeU1rfXnNa81rfXmdaw15zWuNeULCDXlda315nWvNa416nXgta2150g15DWtteqLdeU1rfXmda81rjXnSDXnNa215fWuNeo1rjXkda415Q7INeV1rfXmda81rTXkda81rjXp9aw16LXlda8LCDXlNa3157WvNa415nWtNedLg==</item>
+		<item>15XWt9eZ1rzWtNeh1rzWt9eiINee1rfXnNaw15DWt9ea1rAg15TWuNeQ1rHXnNa515TWtNeZ150sINeU1rfXlNa515zWtdea1rAg15zWtNek1rDXoNa115kg157Wt9eX1rLXoNa115Qg15nWtNep14LWsNeo1rjXkNa115wsINeV1rfXmda81rXXnNa215rWsCwg157WtdeQ1rfXl9ay16jWtdeZ15TWttedOyDXlda315nWvNa016HWvNa316Ig16LWt9ee1rzXlda815Mg15TWttei1rjXoNa4158sINee1rTXpNa81rDXoNa115nXlNa2150sINeV1rfXmda81rfXotay157WudeTLCDXnta115DWt9eX1rLXqNa115nXlNa2150u</item>
+		<item>15XWt9eZ1rzWuNeR1rnXkCDXkda81rXXmdefINee1rfXl9ay16DWtdeUINee1rTXptaw16jWt9eZ1rTXnSwg15XWvNeR1rXXmdefINee1rfXl9ay16DWtdeUINeZ1rTXqdeC1rDXqNa415DWtdecLCDXlda315nWsNeU1rTXmSDXlNa216LWuNeg1rjXnyDXldaw15TWt9eX1rnXqdeB1rbXmtawLCDXlda315nWvNa415DWtteoINeQ1rbXqi3XlNa315zWvNa415nWsNec1rjXlDsg15XWsNec1rnXkC3Xp9a416jWt9eRINeW1rbXlCDXkNa215wt15bWtteULCDXm9a81rjXnC3XlNa315zWvNa415nWsNec1rjXlC4=</item>
+		<item>15XWt9eZ1rzWtdeYINee1rnXqdeB1rbXlCDXkNa216ot15nWuNeT15XWuSwg16LWt9ecLdeU1rfXmda81rjXnSwg15XWt9eZ1rzXlda515zWttea1rAg15nWsNeU15XWuNeUINeQ1rbXqi3XlNa315nWvNa4150g15HWvNaw16jXlda815fWtyDXp9a415PWtNeZ150g16LWt9eW1rzWuNeUINeb1rzWuNecLdeU1rfXnNa81rfXmdaw15zWuNeULCDXlda315nWvNa416nXgta2150g15DWtteqLdeU1rfXmda81rjXnSDXnNa215fWuNeo1rjXkda415Q7INeV1rfXmda81rTXkda81rjXp9aw16LXlda8LCDXlNa3157WvNa415nWtNedLg==</item>
+	</string-array>
+	<string-array name="long_ab">
+		<item>15DWuNeg1rzWuNeQINeR1rzWsNeb1rnXl9a3INeS1rzWsNeT1rvXnNa81rfXqiDXmdaw157WtNeZ16DWttea1rgg16rWvNa316rWvNa015nXqCDXptaw16jXlda816jWuNeU</item>
+		<item>16fWt9eR1rzWtdecINeo1rTXoNa81rfXqiDXota3157WvNa215rWuCDXqdeC1rfXkta81rDXkda116DXlda8INeY1rfXlNay16jWtdeg15XWvCDXoNeV1rnXqNa415A=</item>
+		<item>16DWuNeQINeS1rTXkda815XWudeoINeT1rzXlda516jWsNep14HWtdeZINeZ1rTXl9eV1rzXk9a215rWuCDXm9a81rDXkda415HWt9eqINep14HWuNee1rDXqNa1150=</item>
+		<item>15HWvNa416jWsNeb1rXXnSDXmNa315TWsteo1rXXnSDXqNa315fWstee1rXXmSDXpta015PWsNen1rjXqta215rWuCDXqta81rjXnta015nXkyDXkta81rjXntaw15zWtded</item>
+		<item>15fWsteh1rTXmdefINen1rjXk9eV1rnXqdeBINeR1rzWsNeo15XWudeRINeY15XWvNeR1rDXmta4INeg1rfXlNa115wg16LWsteT1rjXqta215rWuA==</item>
+		<item>15nWuNeX1rTXmdeTINeS1rzWtdeQ1rbXlCDXnNaw16LWt9ee1rzWsNea1rgg16TWvNaw16DWtdeUINeW15XWudeb1rDXqNa115kg16fWsNeT1rvXqda814HWuNeq1rbXmta4</item>
+		<item>16nXgda315XWsNei1rjXqta116DXlda8INen1rfXkda81rXXnCDXlda816nXgdaw157Wt9eiINem1rfXotay16fWuNeq1rXXoNeV1rwg15nXlda515PWtdei1rcg16rWvNa316LWstec15XWvNee15XWudeq</item>
+		<item>15HWvNa416jXlda815rWsCDXqdeB1rXXnSDXm9a81rDXkdeV1rnXkyDXnta315zWsNeb15XWvNeq15XWuSDXnNaw16LXlda515zWuNedINeV1rjXota215M=</item>
+	</string-array>
+	<string-array name="short_ab">
+		<item>15DXkdez15Ig15nXqtez16Y=</item>
+		<item>16fXqNez16Ig16nXmNez16A=</item>
+		<item>16DXktez15Mg15nXm9ez16k=</item>
+		<item>15HXmNez16gg16bXqtez15I=</item>
+		<item>15fXp9ez15Eg15jXoNez16I=</item>
+		<item>15nXktez15wg16TXltez16c=</item>
+		<item>16nXp9ez15Ug16bXmdez16o=</item>
+	</string-array>
+	<string-array name="clockType">
+		<item>Clock normal</item>
+		<item>Clock day-up</item>
+		<item>Clock rotative</item>
+		<item>72 Names</item>
+		<item>Ana Bekoach</item>
+		<item>Parashat Hashavua</item>
+	</string-array>
+	<string-array name="clockType_value">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+	</string-array>
+	<string-array name="sz_names">
+		<item>xx-small</item>
+		<item>x-small</item>
+		<item>small</item>
+		<item>medium</item>
+		<item>large</item>
+		<item>x-large</item>
+		<item>xx-large</item>
+	</string-array>
+	<string-array name="szPercentS">
+		<item>75</item>
+		<item>90</item>
+		<item>95</item>
+		<item>100</item>
+		<item>105</item>
+		<item>110</item>
+		<item>125</item>
+	</string-array>
+	<string-array name="szPercentM">
+		<item>50</item>
+		<item>75</item>
+		<item>90</item>
+		<item>100</item>
+		<item>133</item>
+		<item>166</item>
+		<item>200</item>
+	</string-array>
+	<string-array name="szPercentL">
+		<item>25</item>
+		<item>50</item>
+		<item>100</item>
+		<item>200</item>
+		<item>400</item>
+		<item>800</item>
+		<item>1600</item>
+	</string-array>
+	<string-array name="szTime">
+		<item>22</item>
+		<item>26</item>
+		<item>32</item>
+		<item>42</item>
+		<item>54</item>
+		<item>65</item>
+		<item>72</item>
+	</string-array>
+	<string-array name="szDate">
+		<item>7</item>
+		<item>8</item>
+		<item>10</item>
+		<item>13</item>
+		<item>18</item>
+		<item>22</item>
+		<item>26</item>
+	</string-array>
+	<string-array name="szShemot">
+		<item>72</item>
+		<item>84</item>
+		<item>96</item>
+		<item>108</item>
+		<item>120</item>
+		<item>132</item>
+		<item>144</item>
+	</string-array>
+	<string-array name="szZmanim">
+		<item>4</item>
+		<item>5</item>
+		<item>6</item>
+		<item>7</item>
+		<item>8</item>
+		<item>9</item>
+		<item>10</item>
+	</string-array>
+	<string-array name="sz_fontmarks">
+		<item>5</item>
+		<item>6</item>
+		<item>8</item>
+		<item>10</item>
+		<item>12</item>
+		<item>14</item>
+		<item>16</item>
+	</string-array>
+	<string-array name="sz_fonttitles">
+		<item>13</item>
+		<item>18</item>
+		<item>22</item>
+		<item>26</item>
+		<item>32</item>
+		<item>42</item>
+		<item>54</item>
+	</string-array>
+	<string-array name="szPercent">
+		<item>10</item>
+		<item>20</item>
+		<item>30</item>
+		<item>50</item>
+		<item>70</item>
+		<item>80</item>
+		<item>90</item>
+	</string-array>
+	<string-array name="sz_frame">
+		<item>1</item>
+		<item>2</item>
+		<item>4</item>
+		<item>8</item>
+		<item>16</item>
+		<item>32</item>
+		<item>64</item>
+	</string-array>
+	<string-array name="day_startend">
+		<item>Shekiyah Hachamah</item>
+		<item>Tzet Hakokhavim 60 min.</item>
+		<item>Tzet Hakokhavim 72 min.</item>
+		<item>Tzet Hakokhavim 90 min.</item>
+		<item>Tzet Hakokhavim 120 min.</item>
+		<item>Tzet Hakokhavim 16.1°</item>
+		<item>Tzet Hakokhavim 18°</item>
+		<item>Tzet Hakokhavim 19.8°</item>
+		<item>Tzet Hakokhavim 26°</item>
+	</string-array>
+	<string-array name="day_startend_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
+		<item>7</item>
+		<item>8</item>
+	</string-array>
+	<string-array name="res_names">
+		<item>2 min.</item>
+		<item>5 min.</item>
+		<item>10 min.</item>
+		<item>15 min.</item>
+		<item>20 min.</item>
+		<item>30 min.</item>
+		<item>60 min.</item>
+	</string-array>
+	<string-array name="res_time">
+		<item>1</item>
+		<item>2</item>
+		<item>5</item>
+		<item>7</item>
+		<item>10</item>
+		<item>15</item>
+		<item>30</item>
+	</string-array>
+	<string-array name="time_format">
+		<item>Hours:Minutes:Seconds</item>
+		<item>Hours:Minutes</item>
+		<item>Hours</item>
+	</string-array>
+	<string-array name="time_format_values">
+		<item>HH:mm:ss</item>
+		<item>HH:mm</item>
+		<item>HH</item>
+	</string-array>
+	<string-array name="nShemot_label">
+		<item>20 min. (72 names/24h)</item>
+		<item>72 min.</item>
+		<item>7 days</item>
+		<item>1 month</item>
+	</string-array>
+	<string-array name="nShemot">
+		<item>20</item>
+		<item>72</item>
+		<item>10080</item>
+		<item>302400</item>
+	</string-array>
+	<string-array name="acolors">
+		<item>Lime</item>
+		<item>Green</item>
+		<item>Emerald</item>
+		<item>Teal</item>
+		<item>Cyan</item>
+		<item>Cobalt</item>
+		<item>Indigo</item>
+		<item>Violet</item>
+		<item>Pink</item>
+		<item>Magenta</item>
+		<item>Crimson</item>
+		<item>Red</item>
+		<item>Orange</item>
+		<item>Amber</item>
+		<item>Yellow</item>
+		<item>Brown</item>
+		<item>Olive</item>
+		<item>Steel</item>
+		<item>Mauve</item>
+		<item>Sienna</item>
+	</string-array>
+	<string-array name="acolorsHexValues">
+		<item name="lime">#A4C400</item>
+		<item name="green">#60A917</item>
+		<item>#008A00</item>
+		<item>#00ABA9</item>
+		<item>#1BA1E2</item>
+		<item>#0050EF</item>
+		<item>#6A00FF</item>
+		<item>#AA00FF</item>
+		<item>#F472D0</item>
+		<item>#D80073</item>
+		<item>#A20025</item>
+		<item>#E51400</item>
+		<item>#FA6800</item>
+		<item>#F0A30A</item>
+		<item>#E3C800</item>
+		<item>#825A2C</item>
+		<item>#6D8764</item>
+		<item>#647687</item>
+		<item>#76608A</item>
+		<item>#A0522D</item>
+	</string-array>
+</resources>

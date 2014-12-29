@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="clockType">
+		<item>Normal</item>
+		<item>Dia para cima</item>
+		<item>Rotativo</item>
+		<item>72 Nomes</item>
+		<item>Ana Bekoach</item>
+		<item>Parashat Hashavua</item>
+	</string-array>
+	<string-array name="sz_names">
+	  <item>pequeníssimo</item>
+	  <item>muito pequeno</item>
+	  <item>pequeno</item>
+	  <item>medio</item>
+	  <item>grande</item>
+	  <item>muito grande</item>
+	  <item>enorme</item>
+	</string-array>
+	<string-array name="res_names">
+		<item>2 min.</item>
+		<item>5 min.</item>
+		<item>10 min.</item>
+		<item>15 min.</item>
+		<item>20 min.</item>
+		<item>30 min.</item>
+		<item>60 min.</item>
+	</string-array>
+	<string-array name="time_format">
+		<item>Horas:Minutos:Segundos</item>
+		<item>Horas:Minutos</item>
+		<item>Horas</item>
+		</string-array>
+	<string-array name="nShemot_label">
+		<item>20 min. (72 Nomes em 24h)</item>
+		<item>72 min.</item>
+		<item>7 dias</item>
+		<item>1 mês</item>
+		</string-array>
+  <string-array name="acolors">
+    <item>Lima</item>
+    <item>Verde</item>
+    <item>Esmeralda</item>
+    <item>Azul petróleo</item>
+    <item>Azul claro</item>
+    <item>Cobalto</item>
+    <item>Indigo</item>
+    <item>Violeta</item>
+    <item>Rosa</item>
+    <item>Magenta</item>
+    <item>Crimson</item>
+    <item>Vermelho</item>
+    <item>Laranja</item>
+    <item>Âmbar</item>
+    <item>Amarelo</item>
+    <item>Castanho</item>
+    <item>Oliva</item>
+    <item>Aço</item>
+    <item>Malva</item>
+    <item>Sienna</item>
+  </string-array>
+  <string-array name="acolorsHexValues">
+    <item name="lime">#A4C400</item>
+    <item name="green">#60A917</item>
+    <item>#008A00</item>
+    <item>#00ABA9</item>
+    <item>#1BA1E2</item>
+    <item>#0050EF</item>
+    <item>#6A00FF</item>
+    <item>#AA00FF</item>
+    <item>#F472D0</item>
+    <item>#D80073</item>
+    <item>#A20025</item>
+    <item>#E51400</item>
+    <item>#FA6800</item>
+    <item>#F0A30A</item>
+    <item>#E3C800</item>
+    <item>#825A2C</item>
+    <item>#6D8764</item>
+    <item>#647687</item>
+    <item>#76608A</item>
+    <item>#A0522D</item>
+  </string-array>
+</resources>

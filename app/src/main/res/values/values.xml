@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<integer name="clockMode">0</integer>
+	<integer name="zmanimMode">2</integer>
+	<integer name="nShemot">20</integer>
+	<integer name="resTimeMins">2</integer>
+	<integer name="szTimeMins">50</integer>
+	<integer name="szPtrHeight">50</integer>
+
+	<dimen name="widgetWidth">294dp</dimen>
+	<dimen name="widgetHeight">294dp</dimen>
+	<dimen name="wClockMargin">7dp</dimen>
+	<dimen name="wClockFrame">3dp</dimen>
+	<dimen name="wClockPointer">2dp</dimen>
+
+	<dimen name="szZmanim_sun">7dp</dimen>
+	<dimen name="szZmanim_main">6dp</dimen>
+	<dimen name="szZmanimAlotTzet">6dp</dimen>
+	<dimen name="szTimemarks">5.5dp</dimen>
+	<dimen name="szTime">54dp</dimen>
+	<dimen name="szDate">14dp</dimen>
+	<dimen name="szParshat">12dp</dimen>
+	<dimen name="szShemot">144dp</dimen>
+
+
+	<string name="tsZmanim_sun">HH:mm</string>
+	<string name="tsZmanim_main">HH:mm</string>
+	<string name="tsZmanimAlotTzet">HH:mm</string>
+	<string name="tsTimemarks">HH</string>
+
+	<bool name="iZmanim_sun">false</bool>
+	<bool name="iZmanim_main">false</bool>
+	<bool name="iZmanimAlotTzet">false</bool>
+	<bool name="iTimemarks">true</bool>
+	<bool name="bAlotTzet72">true</bool>
+	<bool name="showZmanim">true</bool>
+	<bool name="showTimeMarks">true</bool>
+	<bool name="showHebDate">true</bool>
+	<bool name="bLangHebrew">false</bool>
+	<bool name="showParashat">true</bool>
+	<bool name="showAnaBekoach">true</bool>
+	<bool name="show72Hashem">true</bool>
+	<bool name="bClockElapsedTime">true</bool>
+</resources>

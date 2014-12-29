@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="pt.gu.zclock" >
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.access_mock_location" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+	<uses-permission android:name="android.permission.BLUETOOTH"/>
+
+    <application
+    	android:allowBackup="true"
+		android:persistent="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <receiver android:name=".zcProvider" >
+        	<intent-filter>
+        		<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        	</intent-filter>
+        	<meta-data android:name="android.appwidget.provider" android:resource="@xml/zc_info"/>
+        </receiver>
+        <service android:name=".zcService" android:exported="false">
+        	<intent-filter>
+        		<action android:name="pt.gu.zclock.action.UPDATE" />
+        	</intent-filter>
+        </service>
+        <activity android:name=".zcPreferences" android:excludeFromRecents="true">
+        	<intent-filter>
+        		<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+        	</intent-filter>
+        </activity>
+    </application>
+</manifest>

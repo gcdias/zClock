@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:colorpref="http://schemas.android.com/apk/res/pt.gu.zclock"
+	android:persistent="true">
+	<Preference android:key="updateLocation" android:title="@string/pCurrLocation"/>
+	<ListPreference
+		android:defaultValue="@integer/clockMode"
+			android:entries="@array/clockType"
+			android:entryValues="@array/clockType_value"
+			android:key="clockMode"
+			android:title="Clock Mode"/>
+	<PreferenceScreen
+		android:summary="@string/ps_sumClockLayout"
+		android:title="@string/psClockLayout">
+		<PreferenceCategory android:title="@string/pc_tTime">
+			<pt.gu.zclock.ColorPreference
+				android:defaultValue="@color/cTime"
+				android:key="cTime"
+				android:title="@string/pColor"/>
+			<ListPreference
+				android:defaultValue="100"
+							android:entries="@array/sz_names"
+							android:entryValues="@array/szPercentM"
+							android:key="szTime"
+							android:title="@string/pSize"/>
+			</PreferenceCategory>
+		<PreferenceCategory android:title="Clock Frame">
+			<pt.gu.zclock.ColorPreference
+				android:defaultValue="@color/cClockFrameOn"
+				android:key="cClockFrameOn"
+				android:summary="Set color"
+				android:title="Foreground Frame Color"/>
+			<pt.gu.zclock.ColorPreference
+				android:defaultValue="@color/cClockFrameOff"
+				android:key="cClockFrameOff"
+			  	android:summary="Set color"
+			  	android:title="Background Frame Color"
+			  colorpref:Res="5"/>
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:key="bClockElapsedTime"
+				android:summary="@string/psumBClockElapsedTime"
+				android:title="@string/pBClockElapsedTime"/>
+			<ListPreference
+				android:defaultValue="@dimen/wClockFrame"
+				android:entries="@array/sz_names"
+				android:entryValues="@array/szPercentL"
+				android:key="wClockFrame"
+				android:title="@string/p_wClockFrame"/>
+			<ListPreference
+				android:defaultValue="90"
+				android:entries="@array/sz_names"
+				android:entryValues="@array/szPercent"
+				android:key="szPtrHeight"
+				android:title="@string/pPtrHeight"/>
+			<ListPreference
+				android:defaultValue="@integer/resTimeMins"
+				android:entries="@array/res_names"
+				android:entryValues="@array/res_time"
+				android:key="resTimeMins"
+				android:summary="Time frame resolution"
+				android:title="Frame Resolution"/>
+			<ListPreference
+				android:defaultValue="@integer/szTimeMins"
+				android:entries="@array/sz_names"
+				android:entryValues="@array/szPercent"
+				android:key="szTimeMins"
+				android:summary="Minute tick size"
+				android:title="Minute tick size"/>
+		</PreferenceCategory>
+		<PreferenceCategory android:title="@string/pc_tHours">
+			<CheckBoxPreference
+				android:defaultValue="true"
+				android:key="showTimeMarks"
+				android:summary="Show hour marks"
+				android:title="Show Marks"/>
+			<pt.gu.zclock.ColorPreference
+				android:defaultValue="@color/cTimemarks"
+				android:dependency="showTimeMarks"
+				android:key="cTimemarks"
+				android:title="@string/pColor"/>
+			<ListPreference
+				android:defaultValue="100"
+				android:dependency="showTimeMarks"
+				android:entries="@array/sz_names"
+				android:entryValues="@array/szPercentS"
+				android:key="szTimemarks"
+				android:title="@string/pSize"/>
+			<ListPreference
+				android:defaultValue="@string/tsTimemarks"
+				android:dependency="showTimeMarks"
+				android:entries="@array/time_format"
+				android:entryValues="@array/time_format_values"
+				android:key="tsTimemarks"
+				android:title="@string/pTimeFormat"/>
+			<CheckBoxPreference
+				android:defaultValue="@bool/iTimemarks"
+				android:dependency="showTimeMarks"
+				android:key="iTimemarks"
+				android:summary="Show inside frame"
+				android:title="@string/pPlace"/>
+			</PreferenceCategory>
+		</PreferenceScreen>
+	<PreferenceScreen
+		android:summary="@string/ps_sumZmanimEngine"
+		android:title="@string/psZmanimEngine">
+		<CheckBoxPreference
+			android:defaultValue="@bool/showZmanim"
+			android:key="bShowZmanim"
+			android:shouldDisableView	="true"
+			android:title="@string/pShowZmanim"/>
+		<ListPreference
+			android:defaultValue="@integer/zmanimMode"
+			android:dependency			="bShowZmanim"
+			android:entries				="@array/day_startend"
+			android:entryValues			="@array/day_startend_values"
+			android:key="zmanimMode"
+			android:summary="@string/p_sumZmanimMode"
+			android:title="@string/pZmanimMode"/>
+		<PreferenceCategory
+			android:dependency="bShowZmanim"
+			android:summary				="@string/pcat_sunrise_s"
+			android:title="@string/pcat_sunrise_t">
+			<pt.gu.zclock.ColorPreference
+				android:defaultValue="@color/cZmanim_sun"
+				android:key="cZmanim_sun"
+				android:title			="@string/pColor"/>
+			<ListPreference
+				android:defaultValue="@dimen/szZmanim_sun"
+				android:entries			="@array/sz_names"
+				android:entryValues		="@array/szZmanim"
+				android:key="szZmanim_sun"
+				android:title			="@string/pSize"/>
+			<ListPreference
+				android:defaultValue="@string/tsZmanim_sun"
+				android:entries			="@array/time_format"
+				android:entryValues		="@array/time_format_values"
+				android:key="tsZmanim_sun"
+				android:title			="@string/pTimeFormat"/>
+			<CheckBoxPreference
+				android:defaultValue="@bool/iZmanim_sun"
+				android:key="iZmanim_sun"
+				android:summary			="Place marks inside the clock frame"
+				android:title			="@string/pPlace"/>
+			</PreferenceCategory>
+		<PreferenceCategory
+			android:dependency		="bShowZmanim"
+			android:summary="Format time marks"
+			android:title="Alot Hashachar/Tzet Hakokhavim">
+			<pt.gu.zclock.ColorPreference
+				android:defaultValue="@color/cZmanimAlotTzet"
+				android:key="cZmanimAlotTzet"
+				android:title="@string/pColor"/>
+			<ListPreference
+				android:defaultValue="100"
+				android:entries="@array/sz_names"
+				android:entryValues="@array/szPercentS"
+				android:key="szZmanimAlotTzet"
+				android:title="@string/pSize"/>
+			<ListPreference
+				android:defaultValue="HH:mm"
+				android:entries="@array/time_format"
+				android:entryValues="@array/time_format_values"
+				android:key="tsZmanimAlotTzet"
+				android:title="@string/pTimeFormat"/>
+			<CheckBoxPreference
+				android:defaultValue="@bool/iZmanimAlotTzet"
+				android:key="iZmanimAlotTzet"
+				android:summary="Place marks inside the clock frame"
+				android:title="@string/pPlace"/>
+			</PreferenceCategory>
+		<PreferenceCategory
+			android:dependency		="bShowZmanim"
+			android:title="Zmanim Times">
+			<pt.gu.zclock.ColorPreference
+				android:defaultValue="@color/cZmanim_main"
+				android:key="cZmanim_main"
+				android:title="@string/pColor"/>
+			<ListPreference
+				android:defaultValue="100"
+				android:entries="@array/sz_names"
+				android:entryValues="@array/szPercentS"
+				android:key="szZmanim_main"
+				android:title="@string/pSize"/>
+			<ListPreference
+				android:defaultValue="@string/tsZmanim_main"
+				android:entries="@array/time_format"
+				android:entryValues="@array/time_format_values"
+				android:key="tsZmanim_main"
+				android:title="@string/pPlace"/>
+			<CheckBoxPreference
+				android:defaultValue="@bool/iZmanim_main"
+				android:key="iZmanim_main"
+				android:summary="Show inside frame"
+				android:title="Placement"/>
+			</PreferenceCategory>
+		</PreferenceScreen>
+	<PreferenceCategory android:title="@string/pc_HebDate">
+		<CheckBoxPreference
+			android:defaultValue="@bool/showHebDate"
+			android:key="showHebDate"
+			android:title="@string/pShowHebDate"/>
+		<CheckBoxPreference
+			android:defaultValue="@bool/bLangHebrew"
+			android:dependency="showHebDate"
+			android:key="bLangHebrew"
+			android:title="@string/pbLangHebrew"/>
+		<pt.gu.zclock.ColorPreference
+			android:defaultValue="@color/cDate"
+			android:dependency="showHebDate"
+			android:key="cDate"
+			android:title="@string/pColor"/>
+		<ListPreference
+			android:defaultValue="100"
+			android:dependency="showHebDate"
+			android:entries="@array/sz_names"
+			android:entryValues="@array/szPercentM"
+			android:key="szDate"
+			android:title="@string/pSize"/>
+		</PreferenceCategory>
+	<PreferenceCategory
+		android:summary="@string/pcsParashat"
+		android:title="@string/pc_parashat">
+		<CheckBoxPreference
+			android:defaultValue="@bool/showParashat"
+			android:key="showParashat"
+			android:title="@string/pShowParashat"/>
+		<pt.gu.zclock.ColorPreference
+			android:defaultValue="@color/cParshat"
+			android:dependency="showParashat"
+			android:key="cParshat"
+			android:title="@string/pColor"/>
+		<ListPreference
+			android:defaultValue="100"
+			android:dependency="showParashat"
+			android:entries="@array/sz_names"
+			android:entryValues="@array/szPercentM"
+			android:key="szParshat"
+			android:title="@string/pSize"/>
+		</PreferenceCategory>
+	<PreferenceCategory
+		android:summary="@string/pc_72Names"
+		android:title="72 Shemot">
+		<CheckBoxPreference
+			android:defaultValue="@bool/show72Hashem"
+			android:key="show72Hashem"
+			android:shouldDisableView="true"
+			android:title="@string/pShow72Names"/>
+		<pt.gu.zclock.ColorPreference
+			android:defaultValue="@color/cShemot"
+			android:dependency="show72Hashem"
+			android:key="cShemot"
+			android:title="@string/pColor"/>
+		<ListPreference
+			android:defaultValue="100"
+			android:dependency="show72Hashem"
+			android:entries="@array/sz_names"
+			android:entryValues="@array/szPercentS"
+			android:key="szShemot"
+			android:title="@string/pSize"/>
+		<ListPreference
+			android:defaultValue="@integer/nShemot"
+			android:dependency="show72Hashem"
+			android:entries="@array/nShemot_label"
+			android:entryValues="@array/nShemot"
+			android:key="nShemot"
+			android:title="Frequency"/>
+		</PreferenceCategory>
+	<Preference android:key="resetDefault"
+		android:selectable="true"
+		android:title="@string/pReset"/>
+	<Preference android:key="removeAll"
+				android:selectable="true"
+				android:title="@string/pRemoveAll"/>
+	</PreferenceScreen>

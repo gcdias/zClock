@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="ps_sumClockLayout">Definições de layout, cor e tamanho</string>
+	<string name="pc_tTime">Horas</string>
+	<string name="pSize">Tamanho</string>
+	<string name="pColor">Cor</string>
+	<string name="pPlace">Inserção</string>
+	<string name="psClockLayout">Definições de layout</string>
+	<string name="pc_tHours">Horas</string>
+	<string name="psZmanimEngine">Definições de Zmanim</string>
+	<string name="ps_sumZmanimEngine">Método de cálculo e formato dos tempos</string>
+	<string name="pShowZmanim">Mostrar Zmanim</string>
+	<string name="pZmanimMode">Método de cálculo</string>
+	<string name="p_sumZmanimMode">Como é calculado o Zmanim</string>
+	<string name="pPtrHeight">Tamanho do ponteiro</string>
+	<string name="p_wClockFrame">Largura da moldura</string>
+	<string name="pbLangHebrew">Em Hebraico</string>
+	<string name="pc_HebDate">Data Hebraica</string>
+	<string name="pShowHebDate">Mostrar Data Hebraica</string>
+	<string name="pc_parashat">Parashat Hashavua e Yom Tov</string>
+	<string name="pcsParashat">Definições de tamanho e cor</string>
+	<string name="pShowParashat">Mostrar Parashat Hashavua e Yom Tov</string>
+	<string name="pc_72Names">pcs72Names</string>
+	<string name="pShow72Names">Show 72 Names</string>
+	<string name="pReset">Restaurar definições</string>
+	<string name="pRemoveAll">Remove All</string>
+	<string name="pBClockElapsedTime">Progress shows Elapsed Time / Remain Time</string>
+	<string name="psumBClockElapsedTime">Progress shows Elapsed Time (checked) or Remain Time (unckecked)</string>
+</resources>

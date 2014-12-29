@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="cClockFrameOn">#ff00c3ff</color>
+	<color name="cClockFrameOff">#1000c3ff</color>
+	<color name="cZmanim_sun">#ff00c3ff</color>
+	<color name="cZmanim_main">#a020c3ff</color>
+	<color name="cZmanimAlotTzet">#800090c0</color>
+	<color name="cTimemarks">#80ffffff</color>
+	<color name="cTime">#ffffffff</color>
+	<color name="cDate">#c3ffffff</color>
+	<color name="cParshat">#80ffffff</color>
+	<color name="cShemot">#07ffffff</color>
+</resources>
