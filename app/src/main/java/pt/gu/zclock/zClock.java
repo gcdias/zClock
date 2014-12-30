@@ -103,7 +103,7 @@ public class zClock {
                     szTimeMins,//=10f,
                     resTimeMins,//=2f;
                     szPtrHeight=50;
-    private int     cFrameOff,// = 0x1000c3ff,
+    public int      cFrameOff,// = 0x1000c3ff,
                     cFrameOn,//=0xff00c3ff,
                     cPointer;// = 0xff00c3ff;
 
@@ -283,6 +283,14 @@ public class zClock {
 
         return bitmap;
 
+    }
+
+    public Bitmap renderBackground(Bitmap bitmap, int bkgColor, float corners) {
+        Canvas canvas=new Canvas(bitmap);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setColor(bkgColor);
+        canvas.drawRoundRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), corners, corners, p);
+        return bitmap;
     }
 
     public float getTimeMins() {

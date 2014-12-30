@@ -171,6 +171,10 @@ public class zcProvider extends AppWidgetProvider {
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions){
         super.onAppWidgetOptionsChanged(context,appWidgetManager,appWidgetId,newOptions);
 
+        //workaround for kitkat issue on START_STICKY
+        context.startService(new Intent(zcService.ACTION_UPDATE));
+
+        //update widgets
         updateWidgetSize(context,appWidgetId);
         setupClockPrefs(context,appWidgetId);
         updateAppWidget(context,appWidgetManager,appWidgetId);
@@ -234,7 +238,7 @@ public class zcProvider extends AppWidgetProvider {
 
         final Typeface tfStam = Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
         int l=0, index=0;
-        int d = jewishCalendar.getDayOfWeek();
+        int d = jewishCalendar.getDayOfWeek()-1;
         int dm = (int)((zmanimCalendar.getSunset().getTime()-zmanimCalendar.getSunrise().getTime())/60000);
         int m = (int)(System.currentTimeMillis()/60000%1440);
         String pasuk, ref;
@@ -244,15 +248,15 @@ public class zcProvider extends AppWidgetProvider {
             String[] parsha = new String(Base64.decode(source[1], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
             String[] yom = new String(Base64.decode(source[0], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
             int v=0;
-            for(int n=0;i<d;n++){
-                v +=Integer.parseInt(yom[n]);
+            for(int n=0;n<d;n++){
+                v +=Integer.valueOf(yom[n]);
             }
-            index=v+(int)(m*Integer.parseInt(yom[d])/1440);
-            //Log.e("Parashat", String.format("L:%d SUM:%d I:%d",l,v,index));
+            index=1+v+(int)(m*Integer.valueOf(yom[d])/1440);
+            //Log.e("Parashat", String.format("parsha %d day %d line %d/%d",i,d+1,v,index));
             pasuk = parsha[index];
             int iref = pasuk.indexOf(" ");
-            ref = String.format ("%s %s",getParshaHashavua(sysCalendar,true,true),pasuk.substring(0,iref));
-            pasuk = pasuk.substring(iref + 1);
+            ref = (iref>0) ? String.format ("%s %s",getParshaHashavua(sysCalendar,true,true),pasuk.substring(0,iref)) : "error";
+            pasuk = (iref>0) ? pasuk.substring(iref + 1) : String.format("L:%d SUM:%d I:%d",l,v,index);
         }
         catch(UnsupportedEncodingException ignored){
             Log.e("Encoding Error","");
@@ -260,6 +264,10 @@ public class zcProvider extends AppWidgetProvider {
         }
         catch(ArrayIndexOutOfBoundsException ignored){
             Toast.makeText(context,"Parashat Hashavua resource is missing",Toast.LENGTH_LONG).show();
+            return bitmap;
+        }
+        catch(StringIndexOutOfBoundsException ignored){
+            Log.e("String Index out of Bounds","");
             return bitmap;
         }
 
