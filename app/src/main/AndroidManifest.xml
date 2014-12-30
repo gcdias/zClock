@@ -21,7 +21,7 @@
         </receiver>
         <service android:name=".zcService" android:exported="false">
         	<intent-filter>
-        		<action android:name="pt.gu.zclock.action.UPDATE" />
+        		<action android:name="zClock.action.SERVICE" />
         	</intent-filter>
         </service>
         <activity android:name=".zcPreferences" android:excludeFromRecents="true">

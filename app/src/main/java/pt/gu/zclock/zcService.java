@@ -2,7 +2,6 @@ package pt.gu.zclock;
 
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -27,7 +26,7 @@ import java.util.Locale;
  */
 public final class zcService extends Service{
 
-    static final String ACTION_UPDATE = "pt.gu.zclock.action.UPDATE";
+    static final String ACTION_UPDATE = "zClock.action.SERVICE";
     private final static IntentFilter sIntentFilter;
     static {
         sIntentFilter = new IntentFilter();
@@ -36,7 +35,6 @@ public final class zcService extends Service{
         sIntentFilter.addAction(Intent.ACTION_TIME_CHANGED);
         sIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         sIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
-        sIntentFilter.addAction(BluetoothDevice.ACTION_FOUND);
     }
 
     //private PowerManager pm;
@@ -62,7 +60,7 @@ public final class zcService extends Service{
                 packageManager.setComponentEnabledSetting(
                         new ComponentName(this,zcService.class),
                         PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                        packageManager.DONT_KILL_APP);
+                        PackageManager.DONT_KILL_APP);
             }
         } catch (Exception ignore) {}
 
@@ -98,8 +96,6 @@ public final class zcService extends Service{
         public void onReceive(Context context, Intent intent) {
 
             final String action = intent.getAction();
-
-            Log.e("Broadcast",action);
 
             if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 Log.e("zcService.onReceive", "Screen OFF, suspending...");
@@ -178,8 +174,7 @@ public final class zcService extends Service{
                     if (null != listAddresses && listAddresses.size() > 0) {
                         _Location = listAddresses.get(0).getAddressLine(0);
                     }
-                } catch (IOException e) {
-                }
+                } catch (IOException ignored) {}
             }
             return _Location;
         }
