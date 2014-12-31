@@ -230,7 +230,9 @@ public class zcProvider extends AppWidgetProvider {
                 colorForeground,0,colorForeground,f,
                 glowSteps,colorBackground,13);
     }
-
+    
+    //region methods updated to zcZmanim
+    
     static Bitmap getCurrentPasuk(Context context, PointF size, int appWidgetId, int type, int fColor, int bColor){
 
         Bitmap bitmap = Bitmap.createBitmap((int)size.x, (int)size.y, Bitmap.Config.ARGB_8888);
@@ -276,7 +278,180 @@ public class zcProvider extends AppWidgetProvider {
         return renderTextBlock(bitmap,tfStam,pasuk,0xa0ffffff, 50f,0);
 
     }
+    
+    static String getParshaHashavua(Calendar c, boolean inHebrew, boolean parshaNameOnly) {
+        int day=c.get(Calendar.DAY_OF_WEEK);
+        String result = (parshaNameOnly) ? "" : (inHebrew) ? ((day%7==0) ? "שבת " : "פרשת השבוע ") : ((day%7==0) ? "Shabbat " : "Parashat Hashavua ");
+        c.add(Calendar.DATE, 7 - day);
+        hebrewFormat.setHebrewFormat(inHebrew);
+        return result+hebrewFormat.formatParsha(new JewishCalendar(c.getTime()));
+    }
+    
+    static int getParshaHashavuaIndex(Calendar cal){
+        Calendar c = (Calendar)cal.clone();
+        int day=c.get(Calendar.DAY_OF_WEEK);
+        c.add(Calendar.DATE, 7 - day);
+        return new JewishCalendar(c).getParshaIndex();
+    }
+    
+    private static long getNewDayTime(Context context,int appWidgetId){
 
+        switch(getIntPref(context,"zmanimMode",appWidgetId)){
+            case 1: return zmanimCalendar.getTzais60().getTime();
+            case 2: return zmanimCalendar.getTzais72().getTime();
+            case 3: return zmanimCalendar.getTzais90().getTime();
+            case 4: return zmanimCalendar.getTzais120().getTime();
+            case 5: return zmanimCalendar.getTzais16Point1Degrees().getTime();
+            case 6: return zmanimCalendar.getTzais18Degrees().getTime();
+            case 7: return zmanimCalendar.getTzais19Point8Degrees().getTime();
+            case 8: return zmanimCalendar.getTzais26Degrees().getTime();
+            default: return zmanimCalendar.getSunset().getTime();
+        }
+    }
+    
+    //preferences
+    static int getIntPref(Context context,String key, int appWidgetId){
+        int ResId = context.getResources().getIdentifier(key,"integer",context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, context.getResources().getInteger(ResId));
+    }
+    static float getDimensPref(Context context,String key, int appWidgetId){
+        int ResId = context.getResources().getIdentifier(key,"dimen",context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, 100)/100f*context.getResources().getDimension(ResId);
+    }
+    static float getSizePref(Context context,String key, int appWidgetId){
+        int ResId = context.getResources().getIdentifier(key,"dimen",context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getFloat(key + appWidgetId, context.getResources().getDimension(ResId));
+    }
+    static String getStringPref(Context context,String key, int appWidgetId) {
+        int ResId = context.getResources().getIdentifier(key,"string",context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(key + appWidgetId, context.getResources().getString(ResId));
+    }
+    static boolean getBoolPref(Context context,String key, int appWidgetId){
+        int ResId = context.getResources().getIdentifier(key,"bool",context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key + appWidgetId, context.getResources().getBoolean(ResId));
+    }
+    static int getColorPref(Context context,String key, int appWidgetId){
+        int ResId = context.getResources().getIdentifier(key,"color",context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, context.getResources().getColor(ResId));
+    }
+    
+    //draw methods
+        //updated to zcZmanim
+    static Bitmap renderText(PointF size,
+                             Typeface typeface,
+                             String title,String[] subtitle,
+                             int title_color, float title_size,
+                             int subtitle_color, float subtitle_size,
+                             int glowSteps,
+                             int bkgColor,
+                             float corners){
+
+        Bitmap bitmap = Bitmap.createBitmap((int)size.x, (int)size.y, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        PointF centro = new PointF(size.x / 2, size.y / 2);
+
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.LINEAR_TEXT_FLAG|Paint.SUBPIXEL_TEXT_FLAG);
+        p.setColor(bkgColor);
+        canvas.drawRoundRect(new RectF(0, 0, size.x, size.y), corners, corners, p);
+        float y_pos=centro.y;
+        p.setTypeface(typeface);
+        p.setTextAlign(Paint.Align.CENTER);
+
+        //Draw title
+        if (title!=null) {
+            Rect b=new Rect();
+            if (title_size==0){
+                p.setTextSize(100);
+                p.getTextBounds(title,0,title.length(),b);
+                p.setTextSize(Math.min(90*size.x/b.width(),50*size.y/b.height()));
+            } else p.setTextSize(title_size);
+            p.setColor(title_color);
+            p.getTextBounds(title,0,title.length(),b);
+            y_pos = centro.y*0.75f-b.centerY();
+            if (glowSteps > 0) {
+                float blur_rad = Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP,22/glowSteps);
+                p.setAlpha(128);
+                for (int i = 0; i < glowSteps; i++) {
+                    canvas.drawText(title, centro.x, y_pos, p);
+                    blur_rad = blur_rad / 2;
+                }
+                p.setMaskFilter(null);
+            }
+            p.setColor(title_color);
+            canvas.drawText(title, centro.x, y_pos, p);
+        }
+
+
+        //Draw subtitle
+        if (subtitle!=null) {
+            Rect b = new Rect();
+            if (subtitle_size == 0) {
+                p.setTextSize(100);
+                p.getTextBounds(subtitle[0], 0, subtitle[0].length(), b);
+                p.setTextSize(Math.min(80 * size.x / b.width(), 50 * size.y / b.height()/subtitle.length));
+            } else p.setTextSize(subtitle_size);
+            p.getTextBounds(subtitle[0], 0, subtitle[0].length(), b);
+            y_pos +=size.y/22f;
+            for(String st:subtitle) {
+                p.setColor(subtitle_color);
+                canvas.drawText(st, centro.x, y_pos - 2.5f * (p.descent() + p.ascent()), p);
+                y_pos +=b.height();
+            }
+        }
+
+        return bitmap;
+    }
+    
+    //updated to zcZmanim
+    static Bitmap renderBackground(Bitmap bitmap, int bkgColor, float corners) {
+        Canvas canvas=new Canvas(bitmap);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setColor(bkgColor);
+        canvas.drawRoundRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), corners, corners, p);
+        return bitmap;
+    }
+    
+    //updated to zcZmanim
+    static Bitmap renderTextBlock(Bitmap bitmap,
+                             Typeface typeface,
+                             String text,
+                             int color, float size, float yPos){
+
+        Canvas canvas = new Canvas(bitmap);
+
+        Log.e("Draw Parsha",text);
+        TextPaint p = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        p.setColor(color);
+        p.setTypeface(typeface);
+        p.setTextSize(size);
+        canvas.translate(-12, 12 + yPos);
+        canvas.save();
+        //p.setMaskFilter(new BlurMaskFilter(7f, BlurMaskFilter.Blur.NORMAL));
+        StaticLayout sl = new StaticLayout(""+text,p,(int)(bitmap.getWidth()*0.95f), Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false);
+        sl.draw(canvas);
+        //p.setMaskFilter(null);
+        //sl = new StaticLayout(""+text,p,(int)(bitmap.getWidth()*0.95f), Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false);
+        //sl.draw(canvas);
+        canvas.restore();
+        return bitmap;
+    }
+    
+    //updated to zcZmanim
+    static Bitmap renderTextLine(Bitmap bitmap,
+                                  Typeface typeface,
+                                  String text, int color, float size,PointF position){
+
+        Canvas canvas = new Canvas(bitmap);
+
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.LINEAR_TEXT_FLAG|Paint.SUBPIXEL_TEXT_FLAG);
+        p.setColor(color);
+        p.setTypeface(typeface);
+        p.setTextSize(size);
+        canvas.drawText(text,position.x,position.y,p);
+        return bitmap;
+    }
+    //endregion
+    
     static void updateWidgetSize(Context context, int appWidgetId){
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -408,64 +583,6 @@ public class zcProvider extends AppWidgetProvider {
         clockUpdated = true;
     }
 
-    static String getParshaHashavua(Calendar c, boolean inHebrew, boolean parshaNameOnly) {
-        int day=c.get(Calendar.DAY_OF_WEEK);
-        String result = (parshaNameOnly) ? "" : (inHebrew) ? ((day%7==0) ? "שבת " : "פרשת השבוע ") : ((day%7==0) ? "Shabbat " : "Parashat Hashavua ");
-        c.add(Calendar.DATE, 7 - day);
-        hebrewFormat.setHebrewFormat(inHebrew);
-        return result+hebrewFormat.formatParsha(new JewishCalendar(c.getTime()));
-    }
-
-    static int getParshaHashavuaIndex(Calendar cal){
-        Calendar c = (Calendar)cal.clone();
-        int day=c.get(Calendar.DAY_OF_WEEK);
-        c.add(Calendar.DATE, 7 - day);
-        return new JewishCalendar(c).getParshaIndex();
-    }
-
-    //region getPreferences Methods
-    static int getIntPref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"integer",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, context.getResources().getInteger(ResId));
-    }
-    static float getDimensPref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"dimen",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, 100)/100f*context.getResources().getDimension(ResId);
-    }
-    static float getSizePref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"dimen",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getFloat(key + appWidgetId, context.getResources().getDimension(ResId));
-    }
-    static String getStringPref(Context context,String key, int appWidgetId) {
-        int ResId = context.getResources().getIdentifier(key,"string",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(key + appWidgetId, context.getResources().getString(ResId));
-    }
-    static boolean getBoolPref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"bool",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key + appWidgetId, context.getResources().getBoolean(ResId));
-    }
-    static int getColorPref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"color",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, context.getResources().getColor(ResId));
-    }
-    //endregion
-
-
-    private static long getNewDayTime(Context context,int appWidgetId){
-
-        switch(getIntPref(context,"zmanimMode",appWidgetId)){
-            case 1: return zmanimCalendar.getTzais60().getTime();
-            case 2: return zmanimCalendar.getTzais72().getTime();
-            case 3: return zmanimCalendar.getTzais90().getTime();
-            case 4: return zmanimCalendar.getTzais120().getTime();
-            case 5: return zmanimCalendar.getTzais16Point1Degrees().getTime();
-            case 6: return zmanimCalendar.getTzais18Degrees().getTime();
-            case 7: return zmanimCalendar.getTzais19Point8Degrees().getTime();
-            case 8: return zmanimCalendar.getTzais26Degrees().getTime();
-            default: return zmanimCalendar.getSunset().getTime();
-        }
-    }
-
     static void updateLocation(Context context){
         zcService.gps_info=new gpsInfo(context);
         zcService.gps_info.update();
@@ -557,117 +674,6 @@ public class zcProvider extends AppWidgetProvider {
         }
 
         Clock.updateTimeMarks();
-    }
-
-    static Bitmap renderText(PointF size,
-                             Typeface typeface,
-                             String title,String[] subtitle,
-                             int title_color, float title_size,
-                             int subtitle_color, float subtitle_size,
-                             int glowSteps,
-                             int bkgColor,
-                             float corners){
-
-        Bitmap bitmap = Bitmap.createBitmap((int)size.x, (int)size.y, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        PointF centro = new PointF(size.x / 2, size.y / 2);
-
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.LINEAR_TEXT_FLAG|Paint.SUBPIXEL_TEXT_FLAG);
-        p.setColor(bkgColor);
-        canvas.drawRoundRect(new RectF(0, 0, size.x, size.y), corners, corners, p);
-        float y_pos=centro.y;
-        p.setTypeface(typeface);
-        p.setTextAlign(Paint.Align.CENTER);
-
-        //Draw title
-        if (title!=null) {
-            Rect b=new Rect();
-            if (title_size==0){
-                p.setTextSize(100);
-                p.getTextBounds(title,0,title.length(),b);
-                p.setTextSize(Math.min(90*size.x/b.width(),50*size.y/b.height()));
-            } else p.setTextSize(title_size);
-            p.setColor(title_color);
-            p.getTextBounds(title,0,title.length(),b);
-            y_pos = centro.y*0.75f-b.centerY();
-            if (glowSteps > 0) {
-                float blur_rad = Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP,22/glowSteps);
-                p.setAlpha(128);
-                for (int i = 0; i < glowSteps; i++) {
-                    canvas.drawText(title, centro.x, y_pos, p);
-                    blur_rad = blur_rad / 2;
-                }
-                p.setMaskFilter(null);
-            }
-            p.setColor(title_color);
-            canvas.drawText(title, centro.x, y_pos, p);
-        }
-
-
-        //Draw subtitle
-        if (subtitle!=null) {
-            Rect b = new Rect();
-            if (subtitle_size == 0) {
-                p.setTextSize(100);
-                p.getTextBounds(subtitle[0], 0, subtitle[0].length(), b);
-                p.setTextSize(Math.min(80 * size.x / b.width(), 50 * size.y / b.height()/subtitle.length));
-            } else p.setTextSize(subtitle_size);
-            p.getTextBounds(subtitle[0], 0, subtitle[0].length(), b);
-            y_pos +=size.y/22f;
-            for(String st:subtitle) {
-                p.setColor(subtitle_color);
-                canvas.drawText(st, centro.x, y_pos - 2.5f * (p.descent() + p.ascent()), p);
-                y_pos +=b.height();
-            }
-        }
-
-        return bitmap;
-    }
-
-    static Bitmap renderBackground(Bitmap bitmap, int bkgColor, float corners) {
-        Canvas canvas=new Canvas(bitmap);
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(bkgColor);
-        canvas.drawRoundRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), corners, corners, p);
-        return bitmap;
-    }
-
-    static Bitmap renderTextBlock(Bitmap bitmap,
-                             Typeface typeface,
-                             String text,
-                             int color, float size, float yPos){
-
-        Canvas canvas = new Canvas(bitmap);
-
-        Log.e("Draw Parsha",text);
-        TextPaint p = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        p.setColor(color);
-        p.setTypeface(typeface);
-        p.setTextSize(size);
-        canvas.translate(-12, 12 + yPos);
-        canvas.save();
-        //p.setMaskFilter(new BlurMaskFilter(7f, BlurMaskFilter.Blur.NORMAL));
-        StaticLayout sl = new StaticLayout(""+text,p,(int)(bitmap.getWidth()*0.95f), Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false);
-        sl.draw(canvas);
-        //p.setMaskFilter(null);
-        //sl = new StaticLayout(""+text,p,(int)(bitmap.getWidth()*0.95f), Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false);
-        //sl.draw(canvas);
-        canvas.restore();
-        return bitmap;
-    }
-
-    static Bitmap renderTextLine(Bitmap bitmap,
-                                  Typeface typeface,
-                                  String text, int color, float size,PointF position){
-
-        Canvas canvas = new Canvas(bitmap);
-
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.LINEAR_TEXT_FLAG|Paint.SUBPIXEL_TEXT_FLAG);
-        p.setColor(color);
-        p.setTypeface(typeface);
-        p.setTextSize(size);
-        canvas.drawText(text,position.x,position.y,p);
-        return bitmap;
     }
 
     static String toNiqqud(String txt){
