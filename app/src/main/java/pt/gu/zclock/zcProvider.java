@@ -65,51 +65,7 @@ public class zcProvider extends AppWidgetProvider {
 
     private static boolean clockUpdated=false;
 
-    @Override
-    public void onEnabled(Context context) {
-        super.onEnabled(context);
-        Log.e("zcProvider.onEnabled","");
-        // Enter relevant functionality for when the first widget is created
-        context.startService(new Intent(zcService.ACTION_UPDATE));
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
-        context.stopService(new Intent(context, zcService.class));
-        Log.e("zcProvider.onDisabled","");
-        Toast.makeText(context, "zClock removed", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
-        context.startService(new Intent(zcService.ACTION_UPDATE));
-
-        //Update widgets
-        updateWidgets(context,appWidgetManager,appWidgetIds);
-        super.onUpdate(context,appWidgetManager,appWidgetIds);
-    }
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        // When the user deletes the widget, delete the preference associated with it.
-        Log.e("zcProvider.onDeleted",String.valueOf(appWidgetIds.length));
-        for (int appWidgetId : appWidgetIds) {
-            removeWidgetPreferences(context, appWidgetId);
-        }
-        context.stopService(new Intent(context, zcService.class));
-        super.onDeleted(context, appWidgetIds);
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent){
-        String iAction = intent.getAction();
-        Log.e("zcProvider.onReceive",iAction);
-        super.onReceive(context,intent);
-    }
-
-    static void updateWidgets (Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    static void updateWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
@@ -124,252 +80,251 @@ public class zcProvider extends AppWidgetProvider {
 
         remoteViews = new RemoteViews(context.getPackageName(), R.layout.main);
 
-        updateWidgetSize(context,appWidgetId);
+        updateWidgetSize(context, appWidgetId);
 
         //Settings Intent
         Intent settingsIntent = new Intent(context, zcPreferences.class).setAction(zcPreferences.ACTION_PREFS);
         settingsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        PendingIntent pendingIntent =PendingIntent.getActivity(context, appWidgetId, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.imageView, pendingIntent);
+
+        zcZmanim zmanim = new zcZmanim(context, appWidgetId);
 
         Log.e("updateAppWidget", String.format("id:%s ", appWidgetId));
         updateWidgetSize(context, appWidgetId);
 
-        int cMode = getIntPref(context,"clockMode", appWidgetId);
-        if (zmanimCalendar==null||!zcService.gps_info.act)updateLocation(context);
-        long newday=getNewDayTime(context,appWidgetId);
+        int cMode = getIntPref(context, "clockMode", appWidgetId);
+        if (zmanimCalendar == null || !zcService.gps_info.act) updateLocation(context);
+        long newday = getNewDayTime(context, appWidgetId);
 
         sysCalendar = Calendar.getInstance();
-        boolean nday=(sysCalendar.getTime().after(new Date(newday)));
-        sysCalendar.add(Calendar.MINUTE,(int)((86400000-newday%86400000)/60000));
+        boolean nday = (sysCalendar.getTime().after(new Date(newday)));
+        sysCalendar.add(Calendar.MINUTE, (int) ((86400000 - newday % 86400000) / 60000));
         jewishCalendar.setDate(sysCalendar);
 
-        if (cMode<3) {
+        if (cMode < 3) {
 
-            if (Clock == null|| nday || !clockUpdated) setupClockPrefs(context,appWidgetId);
+            if (Clock == null || nday || !clockUpdated) setupClockPrefs(context, appWidgetId);
 
-            if (getBoolPref(context,"show72Hashem", appWidgetId))
+            if (getBoolPref(context, "show72Hashem", appWidgetId))
                 Clock.setBackgroundPicture(
-                    getHashemNames(context,Clock.getPxClock(),appWidgetId,HASHEM_72,0x08ffffff,0));
+                        getHashemNames(context, Clock.getPxClock(), appWidgetId, HASHEM_72, 0x08ffffff, 0));
 
             remoteViews.setImageViewBitmap(R.id.imageView, Clock.draw());
         }
 
-        if (cMode==3) remoteViews.setImageViewBitmap(
-                R.id.imageView,getHashemNames(context,getWidgetSizePrefs(context,appWidgetId,true),appWidgetId,HASHEM_72,0xffffffff,0x80000000));
+        if (cMode == 3) remoteViews.setImageViewBitmap(
+                R.id.imageView, getHashemNames(context, getWidgetSizePrefs(context, appWidgetId, true), appWidgetId, HASHEM_72, 0xffffffff, 0x80000000));
 
-        if (cMode==4) remoteViews.setImageViewBitmap(
-                R.id.imageView,getHashemNames(context,getWidgetSizePrefs(context,appWidgetId,true),appWidgetId,HASHEM_42,0xffffffff,0x80000000));
+        if (cMode == 4) remoteViews.setImageViewBitmap(
+                R.id.imageView, getHashemNames(context, getWidgetSizePrefs(context, appWidgetId, true), appWidgetId, HASHEM_42, 0xffffffff, 0x80000000));
 
-        if (cMode==5) remoteViews.setImageViewBitmap(R.id.imageView,getCurrentPasuk(context,getWidgetSizePrefs(context,appWidgetId,true),appWidgetId,0,0xffffffff,0x80000000));
+        if (cMode == 5)
+            remoteViews.setImageViewBitmap(R.id.imageView, getCurrentPasuk(context, getWidgetSizePrefs(context, appWidgetId, true), appWidgetId, 0, 0xffffffff, 0x80000000));
 
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
     }
 
-    @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions){
-        super.onAppWidgetOptionsChanged(context,appWidgetManager,appWidgetId,newOptions);
-
-        //workaround for kitkat issue on START_STICKY
-        context.startService(new Intent(zcService.ACTION_UPDATE));
-
-        //update widgets
-        updateWidgetSize(context,appWidgetId);
-        setupClockPrefs(context,appWidgetId);
-        updateAppWidget(context,appWidgetManager,appWidgetId);
-
-    }
-
-
     static Bitmap getHashemNames(Context context,PointF size,int appWidgetId,int type, int colorForeground, int colorBackground){
 
         PointF wdgtSize = getWidgetSizePrefs(context, appWidgetId, true);
         int index;
-        int glowSteps = (colorBackground==0)?0:3;
-        float f=0;
-        String s1="",s2[]=null;
-        if (type<2) {
-            index = (int) (sysCalendar.getTime().getTime()/60000/getIntPref(context,"nShemot", appWidgetId)) % 72;
-            try{
+        int glowSteps = (colorBackground == 0) ? 0 : 3;
+        float f = 0;
+        String s1 = "", s2[] = null;
+        if (type < 2) {
+            index = (int) (sysCalendar.getTime().getTime() / 60000 / getIntPref(context, "nShemot", appWidgetId)) % 72;
+            try {
                 s1 = new String(
                         Base64.decode(
                                 context.getResources().getStringArray(R.array.short_shemot)[type], Base64.DEFAULT), "UTF-8")
-                                .split("\\r?\\n")[index];
-                if (wdgtSize.x>2*wdgtSize.y){
+                        .split("\\r?\\n")[index];
+                if (wdgtSize.x > 2 * wdgtSize.y) {
                     s2 = new String[]{String.valueOf(index)};
-                    f=10f;
+                    f = 10f;
                 } else {
                     s2 = new String(
                             Base64.decode(
                                     context.getResources().getStringArray(R.array.long_shemot)[0], Base64.DEFAULT), "UTF-8")
                             .split("\\r?\\n");
-                    f=0f;
-                    }
+                    f = 0f;
+                }
+            } catch (UnsupportedEncodingException ignored) {
             }
-            catch(UnsupportedEncodingException ignored){}
 
         } else {
-            index =jewishCalendar.getDayOfWeek();
-            try{
+            index = jewishCalendar.getDayOfWeek();
+            try {
                 s1 = new String(
                         Base64.decode(
-                                context.getResources().getStringArray(R.array.short_ab)[index-1], Base64.DEFAULT), "UTF-8");
+                                context.getResources().getStringArray(R.array.short_ab)[index - 1], Base64.DEFAULT), "UTF-8");
                 s2 = new String[]{new String(
                         Base64.decode(
-                                context.getResources().getStringArray(R.array.long_ab)[index-1], Base64.DEFAULT), "UTF-8")};
+                                context.getResources().getStringArray(R.array.long_ab)[index - 1], Base64.DEFAULT), "UTF-8")};
+            } catch (UnsupportedEncodingException ignored) {
             }
-            catch(UnsupportedEncodingException ignored){}
-            f=0;
+            f = 0;
         }
 
         return renderText(
-            size,
-            Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf"),
-            s1,s2,
-                colorForeground,0,colorForeground,f,
-                glowSteps,colorBackground,13);
+                size,
+                Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf"),
+                s1, s2,
+                colorForeground, 0, colorForeground, f,
+                glowSteps, colorBackground, 13);
     }
-    
-    //region methods updated to zcZmanim
-    
-    static Bitmap getCurrentPasuk(Context context, PointF size, int appWidgetId, int type, int fColor, int bColor){
 
-        Bitmap bitmap = Bitmap.createBitmap((int)size.x, (int)size.y, Bitmap.Config.ARGB_8888);
-        bitmap = renderBackground(bitmap,0x20000000,13);
+    static Bitmap getCurrentPasuk(Context context, PointF size, int appWidgetId, int type, int fColor, int bColor) {
+
+        Bitmap bitmap = Bitmap.createBitmap((int) size.x, (int) size.y, Bitmap.Config.ARGB_8888);
+        bitmap = renderBackground(bitmap, 0x20000000, 13);
 
         final Typeface tfStam = Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
-        int l=0, index=0;
-        int d = jewishCalendar.getDayOfWeek()-1;
-        int dm = (int)((zmanimCalendar.getSunset().getTime()-zmanimCalendar.getSunrise().getTime())/60000);
-        int m = (int)(System.currentTimeMillis()/60000%1440);
+        int l = 0, index = 0;
+        int d = jewishCalendar.getDayOfWeek() - 1;
+        int dm = (int) ((zmanimCalendar.getSunset().getTime() - zmanimCalendar.getSunrise().getTime()) / 60000);
+        int m = (int) (System.currentTimeMillis() / 60000 % 1440);
         String pasuk, ref;
-        try{
-            int i=getParshaHashavuaIndex(sysCalendar);
+        try {
+            int i = getParshaHashavuaIndex(sysCalendar);
             String[] source = context.getResources().getStringArray(R.array.torah)[i].split("#");
             String[] parsha = new String(Base64.decode(source[1], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
             String[] yom = new String(Base64.decode(source[0], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
-            int v=0;
-            for(int n=0;n<d;n++){
-                v +=Integer.valueOf(yom[n]);
+            int v = 0;
+            for (int n = 0; n < d; n++) {
+                v += Integer.valueOf(yom[n]);
             }
-            index=1+v+(int)(m*Integer.valueOf(yom[d])/1440);
+            index = 1 + v + (int) (m * Integer.valueOf(yom[d]) / 1440);
             //Log.e("Parashat", String.format("parsha %d day %d line %d/%d",i,d+1,v,index));
             pasuk = parsha[index];
             int iref = pasuk.indexOf(" ");
-            ref = (iref>0) ? String.format ("%s %s",getParshaHashavua(sysCalendar,true,true),pasuk.substring(0,iref)) : "error";
-            pasuk = (iref>0) ? pasuk.substring(iref + 1) : String.format("L:%d SUM:%d I:%d",l,v,index);
-        }
-        catch(UnsupportedEncodingException ignored){
-            Log.e("Encoding Error","");
+            ref = (iref > 0) ? String.format("%s %s", getParshaHashavua(sysCalendar, true, true), pasuk.substring(0, iref)) : "error";
+            pasuk = (iref > 0) ? pasuk.substring(iref + 1) : String.format("L:%d SUM:%d I:%d", l, v, index);
+        } catch (UnsupportedEncodingException ignored) {
+            Log.e("Encoding Error", "");
             return bitmap;
-        }
-        catch(ArrayIndexOutOfBoundsException ignored){
-            Toast.makeText(context,"Parashat Hashavua resource is missing",Toast.LENGTH_LONG).show();
+        } catch (ArrayIndexOutOfBoundsException ignored) {
+            Toast.makeText(context, "Parashat Hashavua resource is missing", Toast.LENGTH_LONG).show();
             return bitmap;
-        }
-        catch(StringIndexOutOfBoundsException ignored){
-            Log.e("String Index out of Bounds","");
+        } catch (StringIndexOutOfBoundsException ignored) {
+            Log.e("String Index out of Bounds", "");
             return bitmap;
         }
 
-        renderTextBlock(bitmap,tfStam,ref,0x80ffffff,32f,bitmap.getHeight()*0.9f-26f);
+        renderTextBlock(bitmap, tfStam, ref, 0x80ffffff, 32f, bitmap.getHeight() * 0.9f - 26f);
 
-        return renderTextBlock(bitmap,tfStam,pasuk,0xa0ffffff, 50f,0);
+        return renderTextBlock(bitmap, tfStam, pasuk, 0xa0ffffff, 50f, 0);
 
     }
-    
+
     static String getParshaHashavua(Calendar c, boolean inHebrew, boolean parshaNameOnly) {
-        int day=c.get(Calendar.DAY_OF_WEEK);
-        String result = (parshaNameOnly) ? "" : (inHebrew) ? ((day%7==0) ? "שבת " : "פרשת השבוע ") : ((day%7==0) ? "Shabbat " : "Parashat Hashavua ");
+        int day = c.get(Calendar.DAY_OF_WEEK);
+        String result = (parshaNameOnly) ? "" : (inHebrew) ? ((day % 7 == 0) ? "שבת " : "פרשת השבוע ") : ((day % 7 == 0) ? "Shabbat " : "Parashat Hashavua ");
         c.add(Calendar.DATE, 7 - day);
         hebrewFormat.setHebrewFormat(inHebrew);
-        return result+hebrewFormat.formatParsha(new JewishCalendar(c.getTime()));
+        return result + hebrewFormat.formatParsha(new JewishCalendar(c.getTime()));
     }
-    
-    static int getParshaHashavuaIndex(Calendar cal){
-        Calendar c = (Calendar)cal.clone();
-        int day=c.get(Calendar.DAY_OF_WEEK);
+
+    static int getParshaHashavuaIndex(Calendar cal) {
+        Calendar c = (Calendar) cal.clone();
+        int day = c.get(Calendar.DAY_OF_WEEK);
         c.add(Calendar.DATE, 7 - day);
         return new JewishCalendar(c).getParshaIndex();
     }
-    
-    private static long getNewDayTime(Context context,int appWidgetId){
 
-        switch(getIntPref(context,"zmanimMode",appWidgetId)){
-            case 1: return zmanimCalendar.getTzais60().getTime();
-            case 2: return zmanimCalendar.getTzais72().getTime();
-            case 3: return zmanimCalendar.getTzais90().getTime();
-            case 4: return zmanimCalendar.getTzais120().getTime();
-            case 5: return zmanimCalendar.getTzais16Point1Degrees().getTime();
-            case 6: return zmanimCalendar.getTzais18Degrees().getTime();
-            case 7: return zmanimCalendar.getTzais19Point8Degrees().getTime();
-            case 8: return zmanimCalendar.getTzais26Degrees().getTime();
-            default: return zmanimCalendar.getSunset().getTime();
+    private static long getNewDayTime(Context context, int appWidgetId) {
+
+        switch (getIntPref(context, "zmanimMode", appWidgetId)) {
+            case 1:
+                return zmanimCalendar.getTzais60().getTime();
+            case 2:
+                return zmanimCalendar.getTzais72().getTime();
+            case 3:
+                return zmanimCalendar.getTzais90().getTime();
+            case 4:
+                return zmanimCalendar.getTzais120().getTime();
+            case 5:
+                return zmanimCalendar.getTzais16Point1Degrees().getTime();
+            case 6:
+                return zmanimCalendar.getTzais18Degrees().getTime();
+            case 7:
+                return zmanimCalendar.getTzais19Point8Degrees().getTime();
+            case 8:
+                return zmanimCalendar.getTzais26Degrees().getTime();
+            default:
+                return zmanimCalendar.getSunset().getTime();
         }
     }
-    
+
     //preferences
-    static int getIntPref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"integer",context.getPackageName());
+    static int getIntPref(Context context, String key, int appWidgetId) {
+        int ResId = context.getResources().getIdentifier(key, "integer", context.getPackageName());
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, context.getResources().getInteger(ResId));
     }
-    static float getDimensPref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"dimen",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, 100)/100f*context.getResources().getDimension(ResId);
-    }
-    static float getSizePref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"dimen",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getFloat(key + appWidgetId, context.getResources().getDimension(ResId));
-    }
-    static String getStringPref(Context context,String key, int appWidgetId) {
-        int ResId = context.getResources().getIdentifier(key,"string",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(key + appWidgetId, context.getResources().getString(ResId));
-    }
-    static boolean getBoolPref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"bool",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key + appWidgetId, context.getResources().getBoolean(ResId));
-    }
-    static int getColorPref(Context context,String key, int appWidgetId){
-        int ResId = context.getResources().getIdentifier(key,"color",context.getPackageName());
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, context.getResources().getColor(ResId));
+
+    static float getDimensPref(Context context, String key, int appWidgetId) {
+        int ResId = context.getResources().getIdentifier(key, "dimen", context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, 100) / 100f * context.getResources().getDimension(ResId);
     }
     
+    //region methods updated to zcZmanim
+
+    static float getSizePref(Context context, String key, int appWidgetId) {
+        int ResId = context.getResources().getIdentifier(key, "dimen", context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getFloat(key + appWidgetId, context.getResources().getDimension(ResId));
+    }
+
+    static String getStringPref(Context context, String key, int appWidgetId) {
+        int ResId = context.getResources().getIdentifier(key, "string", context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(key + appWidgetId, context.getResources().getString(ResId));
+    }
+
+    static boolean getBoolPref(Context context, String key, int appWidgetId) {
+        int ResId = context.getResources().getIdentifier(key, "bool", context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key + appWidgetId, context.getResources().getBoolean(ResId));
+    }
+
+    static int getColorPref(Context context, String key, int appWidgetId) {
+        int ResId = context.getResources().getIdentifier(key, "color", context.getPackageName());
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key + appWidgetId, context.getResources().getColor(ResId));
+    }
+
     //draw methods
-        //updated to zcZmanim
+    //updated to zcZmanim
     static Bitmap renderText(PointF size,
                              Typeface typeface,
-                             String title,String[] subtitle,
+                             String title, String[] subtitle,
                              int title_color, float title_size,
                              int subtitle_color, float subtitle_size,
                              int glowSteps,
                              int bkgColor,
-                             float corners){
+                             float corners) {
 
-        Bitmap bitmap = Bitmap.createBitmap((int)size.x, (int)size.y, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap((int) size.x, (int) size.y, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         PointF centro = new PointF(size.x / 2, size.y / 2);
 
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.LINEAR_TEXT_FLAG|Paint.SUBPIXEL_TEXT_FLAG);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
         p.setColor(bkgColor);
         canvas.drawRoundRect(new RectF(0, 0, size.x, size.y), corners, corners, p);
-        float y_pos=centro.y;
+        float y_pos = centro.y;
         p.setTypeface(typeface);
         p.setTextAlign(Paint.Align.CENTER);
 
         //Draw title
-        if (title!=null) {
-            Rect b=new Rect();
-            if (title_size==0){
+        if (title != null) {
+            Rect b = new Rect();
+            if (title_size == 0) {
                 p.setTextSize(100);
-                p.getTextBounds(title,0,title.length(),b);
-                p.setTextSize(Math.min(90*size.x/b.width(),50*size.y/b.height()));
+                p.getTextBounds(title, 0, title.length(), b);
+                p.setTextSize(Math.min(90 * size.x / b.width(), 50 * size.y / b.height()));
             } else p.setTextSize(title_size);
             p.setColor(title_color);
-            p.getTextBounds(title,0,title.length(),b);
-            y_pos = centro.y*0.75f-b.centerY();
+            p.getTextBounds(title, 0, title.length(), b);
+            y_pos = centro.y * 0.75f - b.centerY();
             if (glowSteps > 0) {
-                float blur_rad = Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP,22/glowSteps);
+                float blur_rad = Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 22 / glowSteps);
                 p.setAlpha(128);
                 for (int i = 0; i < glowSteps; i++) {
                     canvas.drawText(title, centro.x, y_pos, p);
@@ -383,43 +338,43 @@ public class zcProvider extends AppWidgetProvider {
 
 
         //Draw subtitle
-        if (subtitle!=null) {
+        if (subtitle != null) {
             Rect b = new Rect();
             if (subtitle_size == 0) {
                 p.setTextSize(100);
                 p.getTextBounds(subtitle[0], 0, subtitle[0].length(), b);
-                p.setTextSize(Math.min(80 * size.x / b.width(), 50 * size.y / b.height()/subtitle.length));
+                p.setTextSize(Math.min(80 * size.x / b.width(), 50 * size.y / b.height() / subtitle.length));
             } else p.setTextSize(subtitle_size);
             p.getTextBounds(subtitle[0], 0, subtitle[0].length(), b);
-            y_pos +=size.y/22f;
-            for(String st:subtitle) {
+            y_pos += size.y / 22f;
+            for (String st : subtitle) {
                 p.setColor(subtitle_color);
                 canvas.drawText(st, centro.x, y_pos - 2.5f * (p.descent() + p.ascent()), p);
-                y_pos +=b.height();
+                y_pos += b.height();
             }
         }
 
         return bitmap;
     }
-    
+
     //updated to zcZmanim
     static Bitmap renderBackground(Bitmap bitmap, int bkgColor, float corners) {
-        Canvas canvas=new Canvas(bitmap);
+        Canvas canvas = new Canvas(bitmap);
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(bkgColor);
         canvas.drawRoundRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), corners, corners, p);
         return bitmap;
     }
-    
+
     //updated to zcZmanim
     static Bitmap renderTextBlock(Bitmap bitmap,
-                             Typeface typeface,
-                             String text,
-                             int color, float size, float yPos){
+                                  Typeface typeface,
+                                  String text,
+                                  int color, float size, float yPos) {
 
         Canvas canvas = new Canvas(bitmap);
 
-        Log.e("Draw Parsha",text);
+        Log.e("Draw Parsha", text);
         TextPaint p = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(color);
         p.setTypeface(typeface);
@@ -427,7 +382,7 @@ public class zcProvider extends AppWidgetProvider {
         canvas.translate(-12, 12 + yPos);
         canvas.save();
         //p.setMaskFilter(new BlurMaskFilter(7f, BlurMaskFilter.Blur.NORMAL));
-        StaticLayout sl = new StaticLayout(""+text,p,(int)(bitmap.getWidth()*0.95f), Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false);
+        StaticLayout sl = new StaticLayout("" + text, p, (int) (bitmap.getWidth() * 0.95f), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
         sl.draw(canvas);
         //p.setMaskFilter(null);
         //sl = new StaticLayout(""+text,p,(int)(bitmap.getWidth()*0.95f), Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false);
@@ -435,156 +390,155 @@ public class zcProvider extends AppWidgetProvider {
         canvas.restore();
         return bitmap;
     }
-    
+
     //updated to zcZmanim
     static Bitmap renderTextLine(Bitmap bitmap,
-                                  Typeface typeface,
-                                  String text, int color, float size,PointF position){
+                                 Typeface typeface,
+                                 String text, int color, float size, PointF position) {
 
         Canvas canvas = new Canvas(bitmap);
 
-        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG|Paint.LINEAR_TEXT_FLAG|Paint.SUBPIXEL_TEXT_FLAG);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
         p.setColor(color);
         p.setTypeface(typeface);
         p.setTextSize(size);
-        canvas.drawText(text,position.x,position.y,p);
+        canvas.drawText(text, position.x, position.y, p);
         return bitmap;
     }
-    //endregion
-    
-    static void updateWidgetSize(Context context, int appWidgetId){
+
+    static void updateWidgetSize(Context context, int appWidgetId) {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Bundle newOptions = AppWidgetManager.getInstance(context).getAppWidgetOptions(appWidgetId);
-        int w,h,wCells,hCells;
-        if (Resources.getSystem().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE) {
+        int w, h, wCells, hCells;
+        if (Resources.getSystem().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             w = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
             h = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-        }else{
+        } else {
             w = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
             h = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
         }
 
-        if (Build.VERSION.SDK_INT< Build.VERSION_CODES.ICE_CREAM_SANDWICH){
-            wCells=(int)Math.ceil((w+2)/72);
-            hCells=(int)Math.ceil((h+2)/72);
-        }else{
-            wCells=(int)Math.ceil((w+30)/70);
-            hCells=(int)Math.ceil((h+30)/70);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            wCells = (int) Math.ceil((w + 2) / 72);
+            hCells = (int) Math.ceil((h + 2) / 72);
+        } else {
+            wCells = (int) Math.ceil((w + 30) / 70);
+            hCells = (int) Math.ceil((h + 30) / 70);
         }
 
         SharedPreferences.Editor ed = sharedPreferences.edit();
-        ed.putFloat("widgetWidth" + appWidgetId, (float)w);
-        ed.putFloat("widgetHeight" + appWidgetId, (float)h);
+        ed.putFloat("widgetWidth" + appWidgetId, (float) w);
+        ed.putFloat("widgetHeight" + appWidgetId, (float) h);
         ed.putInt("widgetCellWidth" + appWidgetId, wCells);
-        ed.putInt("widgetCellHeight"+appWidgetId,hCells);
+        ed.putInt("widgetCellHeight" + appWidgetId, hCells);
         ed.commit();
     }
 
-    static PointF getWidgetSizePrefs(Context context,int appWidgetId,boolean applyDimension){
+    static PointF getWidgetSizePrefs(Context context, int appWidgetId, boolean applyDimension) {
         float w = applyDimension ?
-                Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP,getSizePref(context, "widgetWidth", appWidgetId)):
+                Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getSizePref(context, "widgetWidth", appWidgetId)) :
                 getSizePref(context, "widgetWidth", appWidgetId);
         float h = applyDimension ?
-                Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP,getSizePref(context, "widgetHeight", appWidgetId)):
+                Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getSizePref(context, "widgetHeight", appWidgetId)) :
                 getSizePref(context, "widgetWidth", appWidgetId);
-        return new PointF(w,h);
+        return new PointF(w, h);
     }
 
-    static Point getWidgetNCells(Context context,int appWidgetId){
+    static Point getWidgetNCells(Context context, int appWidgetId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Bundle newOptions = AppWidgetManager.getInstance(context).getAppWidgetOptions(appWidgetId);
-        int w,h;
-        if (Resources.getSystem().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE) {
+        int w, h;
+        if (Resources.getSystem().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             w = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
             h = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-        }else{
+        } else {
             w = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
             h = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
         }
 
-        if (Build.VERSION.SDK_INT< Build.VERSION_CODES.ICE_CREAM_SANDWICH){
-            return new Point ((int)Math.ceil((w + 2) / 72),(int)Math.ceil((h + 2) / 72));
-        }else return new Point ((int)Math.ceil((w+30)/70),(int)Math.ceil((h+30)/70));
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return new Point((int) Math.ceil((w + 2) / 72), (int) Math.ceil((h + 2) / 72));
+        } else return new Point((int) Math.ceil((w + 30) / 70), (int) Math.ceil((h + 30) / 70));
     }
 
-    static void updateClock(){
-        clockUpdated=false;
+    static void updateClock() {
+        clockUpdated = false;
     }
 
-    static void setupClockPrefs(Context context,int appWidgetId){
-        if (zmanimCalendar==null) updateLocation(context);
+    static void setupClockPrefs(Context context, int appWidgetId) {
+        if (zmanimCalendar == null) updateLocation(context);
 
-        final Typeface tfThin=Typeface.create(context.getString(R.string.font_thin),Typeface.NORMAL);
-        final Typeface tfCond=Typeface.create(context.getString(R.string.font_condensed),Typeface.NORMAL);
-        final Typeface tfSTAM=Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
+        final Typeface tfThin = Typeface.create(context.getString(R.string.font_thin), Typeface.NORMAL);
+        final Typeface tfCond = Typeface.create(context.getString(R.string.font_condensed), Typeface.NORMAL);
+        final Typeface tfSTAM = Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
 
-        boolean bHeb=getBoolPref(context,"bLangHebrew",appWidgetId);
+        boolean bHeb = getBoolPref(context, "bLangHebrew", appWidgetId);
 
         Clock = new zClock(
-                getIntPref(context,"clockMode",appWidgetId),
-                getNewDayTime(context,appWidgetId),
-                getWidgetSizePrefs(context,appWidgetId,false));
+                getIntPref(context, "clockMode", appWidgetId),
+                getNewDayTime(context, appWidgetId),
+                getWidgetSizePrefs(context, appWidgetId, false));
 
         Clock.setClockFrame(
-                getDimensPref(context,"wClockFrame",appWidgetId),
-                getDimensPref(context,"wClockPointer",appWidgetId),
+                getDimensPref(context, "wClockFrame", appWidgetId),
+                getDimensPref(context, "wClockPointer", appWidgetId),
                 getIntPref(context, "szPtrHeight", appWidgetId),
-                getIntPref(context,"resTimeMins",appWidgetId),
-                getIntPref(context,"szTimeMins",appWidgetId),
-                getColorPref(context,"cClockFrameOn",appWidgetId),
-                getColorPref(context,"cClockFrameOff",appWidgetId),
-                getColorPref(context,"cTime",appWidgetId),
-                getDimensPref(context,"szTime",appWidgetId),
+                getIntPref(context, "resTimeMins", appWidgetId),
+                getIntPref(context, "szTimeMins", appWidgetId),
+                getColorPref(context, "cClockFrameOn", appWidgetId),
+                getColorPref(context, "cClockFrameOff", appWidgetId),
+                getColorPref(context, "cTime", appWidgetId),
+                getDimensPref(context, "szTime", appWidgetId),
                 tfThin);
 
 
-        if(getBoolPref(context,"showHebDate",appWidgetId)){
+        if (getBoolPref(context, "showHebDate", appWidgetId)) {
             hebrewFormat.setHebrewFormat(bHeb);
             hebrewFormat.setTransliteratedMonthList(hebMonthsTrans);
             Clock.addLabel(hebrewFormat.format(jewishCalendar),
-                    getDimensPref(context,"szDate",appWidgetId),
-                    getColorPref(context,"cDate",appWidgetId),
+                    getDimensPref(context, "szDate", appWidgetId),
+                    getColorPref(context, "cDate", appWidgetId),
                     bHeb ? tfSTAM : tfCond,
-                    getDimensPref(context,"wClockMargin",appWidgetId));
-            if (jewishCalendar.isChanukah()){
+                    getDimensPref(context, "wClockMargin", appWidgetId));
+            if (jewishCalendar.isChanukah()) {
                 Clock.addLabel(
-                        bHeb ? ("חנוכה " + jewishCalendar.getDayOfChanukah()):
-                        "Chanukah "+romanNumb[jewishCalendar.getDayOfChanukah()-1],
-                        getDimensPref(context,"szParshat",appWidgetId),
-                        getColorPref(context,"cParshat",appWidgetId),
+                        bHeb ? ("חנוכה " + jewishCalendar.getDayOfChanukah()) :
+                                "Chanukah " + romanNumb[jewishCalendar.getDayOfChanukah() - 1],
+                        getDimensPref(context, "szParshat", appWidgetId),
+                        getColorPref(context, "cParshat", appWidgetId),
                         bHeb ? tfSTAM : tfThin,
-                        getDimensPref(context,"wClockMargin",appWidgetId));
+                        getDimensPref(context, "wClockMargin", appWidgetId));
             }
-            if (jewishCalendar.isRoshChodesh()){
+            if (jewishCalendar.isRoshChodesh()) {
                 Clock.addLabel(
                         bHeb ? "ראש חודש" : "Rosh Chodesh",
-                        getDimensPref(context,"szParshat",appWidgetId),
-                        getColorPref(context,"cParshat",appWidgetId),
+                        getDimensPref(context, "szParshat", appWidgetId),
+                        getColorPref(context, "cParshat", appWidgetId),
                         bHeb ? tfSTAM : tfThin,
-                        getDimensPref(context,"wClockMargin",appWidgetId));
+                        getDimensPref(context, "wClockMargin", appWidgetId));
             }
         }
 
-        if (getBoolPref(context,"showParashat",appWidgetId)) {
-            String s = getParshaHashavua((Calendar) sysCalendar.clone(), bHeb,false);
+        if (getBoolPref(context, "showParashat", appWidgetId)) {
+            String s = getParshaHashavua((Calendar) sysCalendar.clone(), bHeb, false);
             if (s.length() != 0) {
                 Clock.addLabel(s,
-                        getDimensPref(context,"szParshat",appWidgetId),
-                        getColorPref(context,"cParshat",appWidgetId),
+                        getDimensPref(context, "szParshat", appWidgetId),
+                        getColorPref(context, "cParshat", appWidgetId),
                         bHeb ? tfSTAM : tfThin,
-                        getDimensPref(context,"wClockMargin",appWidgetId));
+                        getDimensPref(context, "wClockMargin", appWidgetId));
             }
         }
         if (zcService.gps_info.act) {
-            setZmanimMarks(context,appWidgetId);
+            setZmanimMarks(context, appWidgetId);
             zcService.LastZmanimUpdate = Calendar.getInstance().getTime();
         }
         clockUpdated = true;
     }
 
-    static void updateLocation(Context context){
-        zcService.gps_info=new gpsInfo(context);
+    static void updateLocation(Context context) {
+        zcService.gps_info = new gpsInfo(context);
         zcService.gps_info.update();
         Log.e("zcProvider.updateLocation GPS:", String.format("loc:%s lat:%f long:%f alt:%f tz:%s",
                 zcService.gps_info.getGeolocationName(),
@@ -594,81 +548,99 @@ public class zcProvider extends AppWidgetProvider {
                 sysCalendar.getTimeZone().toString()
         ));
 
-        GeoLocation geoLocation=new GeoLocation(sysCalendar.getTimeZone().toString(),
+        GeoLocation geoLocation = new GeoLocation(sysCalendar.getTimeZone().toString(),
                 zcService.gps_info.lat, zcService.gps_info.lng, zcService.gps_info.alt, sysCalendar.getTimeZone());
         zmanimCalendar = new ComplexZmanimCalendar(geoLocation);
 
     }
+    //endregion
 
-    static void setZmanimMarks(Context context,int appWidgetId){
+    static void setZmanimMarks(Context context, int appWidgetId) {
 
-        final Typeface tfCondN=Typeface.create(context.getString(R.string.font_condensed), Typeface.NORMAL);
-        final Typeface tfRegularB=Typeface.create(context.getString(R.string.font_regular),Typeface.BOLD);
+        final Typeface tfCondN = Typeface.create(context.getString(R.string.font_condensed), Typeface.NORMAL);
+        final Typeface tfRegularB = Typeface.create(context.getString(R.string.font_regular), Typeface.BOLD);
 
         Clock.resetTimeMarks();
 
         //Clock Hours 0-23h
-        if (getBoolPref(context,"showTimeMarks",appWidgetId)) {
+        if (getBoolPref(context, "showTimeMarks", appWidgetId)) {
             Date[] timeHours = new Date[24];
             for (int i = 0; i < 24; i++) {
                 timeHours[i] = new Date(3600000 * i);
             }
             Clock.addMarks(tfCondN,
-                    getColorPref(context,"cTimemarks",appWidgetId),
-                    getDimensPref(context,"szTimemarks",appWidgetId),
-                    getStringPref(context,"tsTimemarks",appWidgetId),
-                    getBoolPref(context,"iTimemarks",appWidgetId),
+                    getColorPref(context, "cTimemarks", appWidgetId),
+                    getDimensPref(context, "szTimemarks", appWidgetId),
+                    getStringPref(context, "tsTimemarks", appWidgetId),
+                    getBoolPref(context, "iTimemarks", appWidgetId),
                     timeHours);
         }
 
-        int zMode=getIntPref(context,"zmanimMode",appWidgetId);
+        int zMode = getIntPref(context, "zmanimMode", appWidgetId);
         Date[] sunsr;
 
-        switch (zMode){
-            case 1: sunsr=new Date[]{zmanimCalendar.getTzais60(),zmanimCalendar.getAlos60()};break;
-            case 2: sunsr=new Date[]{zmanimCalendar.getTzais72(),zmanimCalendar.getAlos72()};break;
-            case 3: sunsr=new Date[]{zmanimCalendar.getTzais90(),zmanimCalendar.getAlos90()};break;
-            case 4: sunsr=new Date[]{zmanimCalendar.getTzais120(),zmanimCalendar.getAlos120()};break;
-            case 5: sunsr=new Date[]{zmanimCalendar.getTzais16Point1Degrees(),zmanimCalendar.getAlos16Point1Degrees()};break;
-            case 6: sunsr=new Date[]{zmanimCalendar.getTzais18Degrees(),zmanimCalendar.getAlos18Degrees()};break;
-            case 7: sunsr=new Date[]{zmanimCalendar.getTzais19Point8Degrees(),zmanimCalendar.getAlos19Point8Degrees()};break;
-            case 8: sunsr=new Date[]{zmanimCalendar.getTzais26Degrees(),zmanimCalendar.getAlos26Degrees()};break;
-            default: sunsr=new Date[]{zmanimCalendar.getSunset(),zmanimCalendar.getSunrise()};
+        switch (zMode) {
+            case 1:
+                sunsr = new Date[]{zmanimCalendar.getTzais60(), zmanimCalendar.getAlos60()};
+                break;
+            case 2:
+                sunsr = new Date[]{zmanimCalendar.getTzais72(), zmanimCalendar.getAlos72()};
+                break;
+            case 3:
+                sunsr = new Date[]{zmanimCalendar.getTzais90(), zmanimCalendar.getAlos90()};
+                break;
+            case 4:
+                sunsr = new Date[]{zmanimCalendar.getTzais120(), zmanimCalendar.getAlos120()};
+                break;
+            case 5:
+                sunsr = new Date[]{zmanimCalendar.getTzais16Point1Degrees(), zmanimCalendar.getAlos16Point1Degrees()};
+                break;
+            case 6:
+                sunsr = new Date[]{zmanimCalendar.getTzais18Degrees(), zmanimCalendar.getAlos18Degrees()};
+                break;
+            case 7:
+                sunsr = new Date[]{zmanimCalendar.getTzais19Point8Degrees(), zmanimCalendar.getAlos19Point8Degrees()};
+                break;
+            case 8:
+                sunsr = new Date[]{zmanimCalendar.getTzais26Degrees(), zmanimCalendar.getAlos26Degrees()};
+                break;
+            default:
+                sunsr = new Date[]{zmanimCalendar.getSunset(), zmanimCalendar.getSunrise()};
         }
 
         Clock.changeNewDay(sunsr[0].getTime());
         long chatzot = zmanimCalendar.getChatzos().getTime();
-        
-        Date d1 = (zMode==0) ? zmanimCalendar.getTzais():zmanimCalendar.getSunset();
-        Date d2 = (zMode==0) ? zmanimCalendar.getAlosHashachar():zmanimCalendar.getSunrise();
+
+        Date d1 = (zMode == 0) ? zmanimCalendar.getTzais() : zmanimCalendar.getSunset();
+        Date d2 = (zMode == 0) ? zmanimCalendar.getAlosHashachar() : zmanimCalendar.getSunrise();
 
         Clock.addMarks(tfRegularB,
-                getColorPref(context,"cZmanim_sun",appWidgetId),
+                getColorPref(context, "cZmanim_sun", appWidgetId),
                 getDimensPref(context, "szZmanim_sun", appWidgetId),
-                getStringPref(context,"tsZmanim_sun",appWidgetId),
-                getBoolPref(context,"iZmanim_sun",appWidgetId),
+                getStringPref(context, "tsZmanim_sun", appWidgetId),
+                getBoolPref(context, "iZmanim_sun", appWidgetId),
                 new Date[]{
                         sunsr[0],
                         sunsr[1],
                         d1,
                         d2,
                         new Date(chatzot),
-                        new Date(chatzot+43200000)});
+                        new Date(chatzot + 43200000)});
 
-        if (getBoolPref(context,"showZmanim",appWidgetId)) {
+        if (getBoolPref(context, "showZmanim", appWidgetId)) {
 
             Clock.addMarks(tfCondN,
-                    getColorPref(context,"cZmanim_main",appWidgetId),
-                    getDimensPref(context,"szZmanim_main",appWidgetId),
-                    getStringPref(context,"tsZmanim_main",appWidgetId),
-                    getBoolPref(context,"iZmanim_main",appWidgetId),
+                    getColorPref(context, "cZmanim_main", appWidgetId),
+                    getDimensPref(context, "szZmanim_main", appWidgetId),
+                    getStringPref(context, "tsZmanim_main", appWidgetId),
+                    getBoolPref(context, "iZmanim_main", appWidgetId),
                     new Date[]{
                             zmanimCalendar.getSunriseOffsetByDegrees(AstronomicalCalendar.ASTRONOMICAL_ZENITH - 11),
-                            zmanimCalendar.getSofZmanShma(sunsr[1],sunsr[0]),
-                            zmanimCalendar.getSofZmanTfila(sunsr[1],sunsr[0]),
-                            zmanimCalendar.getMinchaKetana(sunsr[1],sunsr[0]),
-                            zmanimCalendar.getMinchaGedola(sunsr[1],sunsr[0]),
-                            zmanimCalendar.getPlagHamincha(sunsr[1],sunsr[0])
+                            zmanimCalendar.getSofZmanShma(sunsr[1], sunsr[0]),
+                            zmanimCalendar.getSofZmanTfila(sunsr[1], sunsr[0]),
+                            zmanimCalendar.getMinchaKetana(sunsr[1], sunsr[0]),
+                            zmanimCalendar.getMinchaGedola(sunsr[1], sunsr[0]),
+                            zmanimCalendar.getPlagHamincha(sunsr[1], sunsr[0])
                     });
 
         }
@@ -676,14 +648,71 @@ public class zcProvider extends AppWidgetProvider {
         Clock.updateTimeMarks();
     }
 
-    static String toNiqqud(String txt){
-        String res=null;
-        for(char c:txt.toCharArray())
-            if (c < 0x041 || c == 0x05be || (c > 0x05af && c < 0x05eb && (c < 0x05bd || c > 0x05bf) && c != 0x05c3))
-            {
+    static String toNiqqud(String txt) {
+        String res = null;
+        for (char c : txt.toCharArray())
+            if (c < 0x041 || c == 0x05be || (c > 0x05af && c < 0x05eb && (c < 0x05bd || c > 0x05bf) && c != 0x05c3)) {
                 res += c;
             }
         return res;
+    }
+
+    @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+        Log.e("zcProvider.onEnabled", "");
+        // Enter relevant functionality for when the first widget is created
+        context.startService(new Intent(zcService.ACTION_UPDATE));
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        // Enter relevant functionality for when the last widget is disabled
+        context.stopService(new Intent(context, zcService.class));
+        Log.e("zcProvider.onDisabled", "");
+        Toast.makeText(context, "zClock removed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
+        context.startService(new Intent(zcService.ACTION_UPDATE));
+
+        //Update widgets
+        updateWidgets(context, appWidgetManager, appWidgetIds);
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        // When the user deletes the widget, delete the preference associated with it.
+        Log.e("zcProvider.onDeleted", String.valueOf(appWidgetIds.length));
+        for (int appWidgetId : appWidgetIds) {
+            removeWidgetPreferences(context, appWidgetId);
+        }
+        context.stopService(new Intent(context, zcService.class));
+        super.onDeleted(context, appWidgetIds);
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String iAction = intent.getAction();
+        Log.e("zcProvider.onReceive", iAction);
+        super.onReceive(context, intent);
+    }
+
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+
+        //workaround for kitkat issue on START_STICKY
+        context.startService(new Intent(zcService.ACTION_UPDATE));
+
+        //update widgets
+        updateWidgetSize(context, appWidgetId);
+        setupClockPrefs(context, appWidgetId);
+        updateAppWidget(context, appWidgetManager, appWidgetId);
+
     }
 
     public void removeWidgetPreferences(Context context,int appWidgetId){
