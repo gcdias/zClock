@@ -85,9 +85,11 @@ public class zcZmanim {
 
             }
 
+            /*
             if (getBoolPref("show72Hashem"))
                 Clock.setBackgroundPicture(
                         getHashemNames(context, Clock.getPxClock(), appWidgetId, HASHEM_72, 0x08ffffff, 0));
+                        */
         }
         return bitmap;
     }
@@ -201,6 +203,7 @@ public class zcZmanim {
 
     private String getCurrentHashemName(int HashemName) {
 
+        /*
         int index;
         float f = 0;
         String s1 = "", s2[] = null;
@@ -245,6 +248,8 @@ public class zcZmanim {
                 s1, s2,
                 colorForeground, 0, colorForeground, f,
                 glowSteps, colorBackground, 13);
+                */
+        return null;
     }
 
     private String decodeResourceArray(int ResId, int index) {
