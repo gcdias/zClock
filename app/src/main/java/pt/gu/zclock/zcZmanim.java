@@ -144,7 +144,7 @@ public class zcZmanim {
 
         public clockLayout(){}
 
-        public void getFromPreferences(Context context, int appWidgetId){
+        public void loadPreferences(){
             this.sizeFrame=getDimensPref("wClockFrame");
             this.szPrtWidth=getDimensPref("wClockPointer");
             this.szPtrHeight=getIntPref("szPtrHeight")/100f;
@@ -225,6 +225,23 @@ public class zcZmanim {
     //endregion
 
     //region Draw methods
+    
+    public int applyDim(int typedValueUnit,float value){
+        return (int) TypedValue.applyDimension(typedValyeUnit, value, Resources.getSystem().getDisplayMetrics());
+    }
+    
+    public Bitmap createWidgetBitmap(boolean square) {
+        
+        int width = applyDim(TypedValue.COMPLEX_UNIT_DIP,getSizePref("widgetWidth");
+        int height= applyDim(TypedValue.COMPLEX_UNIT_DIP,getSizePref("widgetHeight")
+        
+        if (square) {
+            width = Math.min(width,height);
+            height= width;
+        }
+        
+        return Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);
+    }
 
     public Bitmap renderBackground(Bitmap bitmap, int bkgColor, float corners) {
         Canvas canvas=new Canvas(bitmap);
@@ -314,7 +331,7 @@ public class zcZmanim {
     }
 
 
-        //endregion
+    //endregion
 
     //region getPreferences Methods
     private int getIntPref(String key){
