@@ -135,6 +135,7 @@ public class zcZmanim {
         PointF clockCenter;
         float sizeFrame;
         float szPtrHeight;
+        float szPrtWidth;
         int resTimeMins;
         float szTimeMins;
         float rotationDeg;
@@ -142,6 +143,20 @@ public class zcZmanim {
         boolean renderElapsedTime;
 
         public clockLayout(){}
+
+        public void getFromPreferences(Context context, int appWidgetId){
+            this.sizeFrame=getDimensPref("wClockFrame");
+            this.szPrtWidth=getDimensPref("wClockPointer");
+            this.szPtrHeight=getIntPref("szPtrHeight")/100f;
+            this.resTimeMins=getIntPref("resTimeMins");
+            this.szTimeMins=getIntPref("szTimeMins")/100f;
+            this.colorFrameForeground=getColorPref("cClockFrameOn");
+            this.colorFrameBackground=getColorPref("cClockFrameOff");
+            this.renderElapsedTime=getBoolPref("bClockElapsedTime");
+            int i =getIntPref("clockMode");
+            this.noRotation = (i==2);
+            this.rotationDeg = (i==1) ? 90f : -90f;
+        }
     }
 
     //region parsha methods
@@ -256,10 +271,13 @@ public class zcZmanim {
     public Bitmap renderClock(Bitmap backgroundBitmap,clockLayout layout) {
 
         int pxRad = Math.min(backgroundBitmap.getHeight(), backgroundBitmap.getWidth());
+        if (layout.clockCenter==null) layout.clockCenter = new PointF(backgroundBitmap.getWidth()/2,backgroundBitmap.getHeight()/2);
         float newdaytime_angle = ((this.mNewDay.getTime() / 60000f) % 1440)/4;
+        float time = System.currentTimeMillis() / 60000f % 1440;
+        float time_angle = (time / 4) % 360;
+        float angle_offset = layout.noRotation ? -time_angle:layout.rotationDeg;
 
         Canvas canvas = new Canvas(backgroundBitmap);
-
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         //Draw Clock background Frame
@@ -268,15 +286,9 @@ public class zcZmanim {
         p.setStyle(Paint.Style.STROKE);
         canvas.drawCircle(layout.clockCenter.x, layout.clockCenter.y, pxRad, p);
 
-        float time = System.currentTimeMillis() / 60000f % 1440;
-        float time_angle = (time / 4) % 360;
-
-        float angle_offset = layout.noRotation ? -time_angle:layout.rotationDeg;
-
         //Elapsed Time
         p.setColor(layout.colorFrameForeground);
         p.setPathEffect(renderDashPathEffect(pxRad,layout.resTimeMins,layout.szTimeMins));
-        Log.e("Clock.draw", String.format("ta:%f ndta:%f", time_angle, newdaytime_angle));
         float angStart = layout.renderElapsedTime ? newdaytime_angle : time_angle;
         float angLenght = layout.renderElapsedTime ? time_angle - newdaytime_angle : newdaytime_angle - time_angle;
         if (angLenght < 0) angLenght += 360;
@@ -321,11 +333,11 @@ public class zcZmanim {
         int ResId = mContext.getResources().getIdentifier(key,"string",mContext.getPackageName());
         return mSharedPreferences.getString(key + mAppWidgetId, mContext.getResources().getString(ResId));
     }
-    private boolean getBoolPref(String key, int mAppWidgetId){
+    private boolean getBoolPref(String key){
         int ResId = mContext.getResources().getIdentifier(key,"bool",mContext.getPackageName());
         return mSharedPreferences.getBoolean(key + mAppWidgetId, mContext.getResources().getBoolean(ResId));
     }
-    private int getColorPref(String key, int mAppWidgetId){
+    private int getColorPref(String key){
         int ResId = mContext.getResources().getIdentifier(key,"color",mContext.getPackageName());
         return mSharedPreferences.getInt(key + mAppWidgetId, mContext.getResources().getColor(ResId));
     }
