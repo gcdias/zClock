@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -75,6 +76,7 @@ public class zcZmanim {
     public Bitmap getWidgetBitmap() {
 
         Bitmap bitmap = this.createWidgetBitmap((mMode < 3));
+        final Typeface tfStam = Typeface.createFromAsset(mContext.getAssets(), "fonts/sefstm.ttf");
 
         if (mMode < 3) {
 
@@ -83,14 +85,16 @@ public class zcZmanim {
                 String name = decodeResourceArray(R.array.short_shemot, HASHEM_72).split("\\r?\\n")[index];
                 String verses = decodeResourceArray(R.array.long_shemot, 0);
                 renderBackground(bitmap, 0x80000000, 3f);
+                renderTextLine(bitmap,
+                        new labelFormat(tfStam, 0x08ffffff, 0f),
+                        name,
+                        new PointF(bitmap.getWidth() / 2, bitmap.getHeight() * 0.4f));
+                labelFormat vLines = new labelFormat(tfStam, Color.WHITE, 0f);
+                for (String verse : verses.split("\\r?\\n")) {
+
+                }
 
             }
-
-            /*
-            if (getBoolPref("show72Hashem"))
-                Clock.setBackgroundPicture(
-                        getHashemNames(context, Clock.getPxClock(), appWidgetId, HASHEM_72, 0x08ffffff, 0));
-                        */
         }
         return bitmap;
     }
@@ -142,7 +146,7 @@ public class zcZmanim {
         return Color.HSVToColor(hsv);
     }
 
-    private Bitmap getCurrentPasuk(Context context, PointF size, int appWidgetId, int type, int fColor, int bColor) {
+    private Bitmap getCurrentPasuk(Context context, PointF size) {
 
         Bitmap bitmap = Bitmap.createBitmap((int) size.x, (int) size.y, Bitmap.Config.ARGB_8888);
         bitmap = renderBackground(bitmap, 0x20000000, 13);
@@ -319,11 +323,20 @@ public class zcZmanim {
     public Bitmap renderTextLine(Bitmap bitmap, labelFormat format, String text, PointF position) {
 
         Canvas canvas = new Canvas(bitmap);
+        PointF size = new PointF(bitmap.getWidth(), bitmap.getHeight());
 
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
         p.setColor(format.color);
         p.setTypeface(format.typeface);
-        p.setTextSize(format.size);
+        Rect b = new Rect();
+
+        //autosize if format.size=0
+        if (format.size == 0) {
+            p.setTextSize(100);
+            p.getTextBounds(text, 0, text.length(), b);
+            p.setTextSize(Math.min(90 * size.x / b.width(), 50 * size.y / b.height()));
+        } else p.setTextSize(format.size);
+
         canvas.drawText(text, position.x, position.y, p);
         return bitmap;
     }
