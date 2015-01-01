@@ -82,6 +82,7 @@ public class zcZmanim {
                 int index = (int) (sysCalendar.getTime().getTime() / 60000 / getIntPref("nShemot")) % 72;
                 String name = decodeResourceArray(R.array.short_shemot, HASHEM_72).split("\\r?\\n")[index];
                 String verses = decodeResourceArray(R.array.long_shemot, 0);
+                renderBackground(bitmap, 0x80000000, 3f);
 
             }
 
@@ -191,6 +192,7 @@ public class zcZmanim {
         hebFormat.setHebrewFormat(inHebrew);
         return result + hebFormat.formatParsha(new JewishCalendar(c.getTime()));
     }
+
 
     private int getParshaHashavuaIndex(Calendar cal) {
         Calendar c = (Calendar) cal.clone();
