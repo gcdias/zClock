@@ -37,59 +37,12 @@ public final class zcService extends Service{
         sIntentFilter.addAction(Intent.ACTION_SCREEN_ON);
     }
 
+    static Date LastZmanimUpdate;
+    static gpsInfo gps_info;
     //private PowerManager pm;
     private boolean pmScreenOn=true;
     private ComponentName widgets;
     private AppWidgetManager manager;
-    static Date LastZmanimUpdate;
-    static gpsInfo gps_info;
-
-
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        widgets= new ComponentName(getApplicationContext(), zcProvider.class);
-        manager = AppWidgetManager.getInstance(getApplicationContext());
-        gps_info = new gpsInfo(getApplicationContext());
-
-        try {
-            PackageManager packageManager = getPackageManager();
-            if (packageManager != null) {
-                Log.e("zcService.onCreate", "packagemanager dont kill app");
-                packageManager.setComponentEnabledSetting(
-                        new ComponentName(this,zcService.class),
-                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                        PackageManager.DONT_KILL_APP);
-            }
-        } catch (Exception ignore) {}
-
-        //Register Receiver
-        registerReceiver(mTimeChangedReceiver, sIntentFilter);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(mTimeChangedReceiver);
-        Toast.makeText(getApplicationContext(),"Zmanim Clock Service Stopped",Toast.LENGTH_LONG).show();
-    }
-
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("zcService.onStartCommand","");
-        //super.onStartCommand(intent, flags, startId);
-        registerReceiver(mTimeChangedReceiver, sIntentFilter);
-        return START_STICKY;
-    }
-
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
     private final BroadcastReceiver mTimeChangedReceiver = new BroadcastReceiver() {
 
         @Override
@@ -116,7 +69,7 @@ public final class zcService extends Service{
 
                 if (action.equals(Intent.ACTION_TIME_TICK)) {
                     Log.e("zcService.onReceive", "Time-tick");
-                    if (!gps_info.act){
+                    if (!gps_info.act) {
                         gps_info.update();
                         zcProvider.updateLocation(context);
                     }
@@ -126,6 +79,49 @@ public final class zcService extends Service{
             }
         }
     };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        widgets = new ComponentName(getApplicationContext(), zcProvider.class);
+        manager = AppWidgetManager.getInstance(getApplicationContext());
+        gps_info = new gpsInfo(getApplicationContext());
+
+        try {
+            PackageManager packageManager = getPackageManager();
+            if (packageManager != null) {
+                Log.e("zcService.onCreate", "packagemanager dont kill app");
+                packageManager.setComponentEnabledSetting(
+                        new ComponentName(this, zcService.class),
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                        PackageManager.DONT_KILL_APP);
+            }
+        } catch (Exception ignore) {
+        }
+
+        //Register Receiver
+        registerReceiver(mTimeChangedReceiver, sIntentFilter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mTimeChangedReceiver);
+        Toast.makeText(getApplicationContext(), "Zmanim Clock Service Stopped", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e("zcService.onStartCommand", "");
+        //super.onStartCommand(intent, flags, startId);
+        registerReceiver(mTimeChangedReceiver, sIntentFilter);
+        return START_STICKY;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     static final class gpsInfo {
         double lat;
@@ -168,7 +164,7 @@ public final class zcService extends Service{
         public String getGeolocationName() {
             String _Location = null;
             if (act) {
-                Geocoder geocoder = new Geocoder(context.getApplicationContext(), Locale.getDefault());
+                Geocoder geocoder = new Geocoder(context, Locale.getDefault());
                 try {
                     List<Address> listAddresses = geocoder.getFromLocation(lat, lng, 1);
                     if (null != listAddresses && listAddresses.size() > 0) {

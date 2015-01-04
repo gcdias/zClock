@@ -51,8 +51,17 @@ public class zcProvider extends AppWidgetProvider {
     static final int    HASHEM_72_SOF   =1;
     static final int    HASHEM_42       =2;
     static final String[] romanNumb     ={"I","II","III","IV","V","VI","VII","VIII","IX","X"};
-    static final String[] hebMonthsTrans = { "Nissan", "Iyar", "Sivan", "Tamuz", "Av", "Elul", "Tishri", "Mar Cheshvan",
+    static final String[] hebMonthsTransl = {"Nissan", "Iyar", "Sivan", "Tamuz", "Av", "Elul", "Tishri", "Mar Cheshvan",
             "Kislev", "Tevet", "Shevat", "Adar", "Adar II", "Adar I" };
+    static final String[] parshiotTransl = {
+            "Bereshit", "Noach", "Lech-Lecha", "Vayera", "Chaye-Sarah", "Toldot",
+            "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi",
+            "Shemot", "Vaera", "Bo", "Beshalach", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki Tisa", "Vayakchel", "Pekude",
+            "Vayikra", "Tzav", "Shmini", "Tazria", "Metzora", "Achrei Mos", "Kedoshim", "Emor", "Behar", "Bechukotai",
+            "Bamidbar", "Naso", "Beha'alotcha", "Shelach", "Korach", "Chukat", "Balak", "Pinchas", "Matot", "Masei",
+            "Devarim", "Vaetchanan", "Ekev", "Re'eh", "Shoftim", "Ki Tetze", "Ki Tavo", "Nitzavim", "Vayelech", "Ha'Azinu",
+            "Vayakchel Pekudei", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
+            "Matot Masei", "Nitzavim Vayelech"};
 
 
     public static zClock Clock;
@@ -66,6 +75,9 @@ public class zcProvider extends AppWidgetProvider {
     private static boolean clockUpdated=false;
 
     static void updateWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
+        //int c=zcZmanim.getAverageColorFromCurrentWallpaper(context,20);
+        //Log.e("Color",String.format("#%06X", 0xFFFFFF & c));
 
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
@@ -87,8 +99,6 @@ public class zcProvider extends AppWidgetProvider {
         settingsIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, settingsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.imageView, pendingIntent);
-
-        zcZmanim zmanim = new zcZmanim(context, appWidgetId);
 
         Log.e("updateAppWidget", String.format("id:%s ", appWidgetId));
         updateWidgetSize(context, appWidgetId);
@@ -124,6 +134,11 @@ public class zcProvider extends AppWidgetProvider {
 
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
+    }
+
+    static Calendar updateCalendar(Calendar c, long newday) {
+        c.add(Calendar.MINUTE, (int) ((86400000 - newday % 86400000) / 60000));
+        return c;
     }
 
     static Bitmap getHashemNames(Context context,PointF size,int appWidgetId,int type, int colorForeground, int colorBackground){
@@ -184,7 +199,7 @@ public class zcProvider extends AppWidgetProvider {
         int l = 0, index = 0;
         int d = jewishCalendar.getDayOfWeek() - 1;
         int dm = (int) ((zmanimCalendar.getSunset().getTime() - zmanimCalendar.getSunrise().getTime()) / 60000);
-        int m = (int) (System.currentTimeMillis() / 60000 % 1440);
+        int m = (int) (sysCalendar.getTime().getTime() / 60000) % 1440;
         String pasuk, ref;
         try {
             int i = getParshaHashavuaIndex(sysCalendar);
@@ -195,12 +210,12 @@ public class zcProvider extends AppWidgetProvider {
             for (int n = 0; n < d; n++) {
                 v += Integer.valueOf(yom[n]);
             }
-            index = 1 + v + (int) (m * Integer.valueOf(yom[d]) / 1440);
-            //Log.e("Parashat", String.format("parsha %d day %d line %d/%d",i,d+1,v,index));
+            index = 1 + v + (m * Integer.valueOf(yom[d]) / 1440);
+            Log.e("Parashat", String.format("parsha %d day %d line %d/%d", i, d + 1, v, index));
             pasuk = parsha[index];
             int iref = pasuk.indexOf(" ");
             ref = (iref > 0) ? String.format("%s %s", getParshaHashavua(sysCalendar, true, true), pasuk.substring(0, iref)) : "error";
-            pasuk = (iref > 0) ? pasuk.substring(iref + 1) : String.format("L:%d SUM:%d I:%d", l, v, index);
+            pasuk = (iref > 0) ? toNiqqud(pasuk.substring(iref + 1)) : String.format("ERRO %d/%d", index, l);
         } catch (UnsupportedEncodingException ignored) {
             Log.e("Encoding Error", "");
             return bitmap;
@@ -382,7 +397,7 @@ public class zcProvider extends AppWidgetProvider {
         canvas.translate(-12, 12 + yPos);
         canvas.save();
         //p.setMaskFilter(new BlurMaskFilter(7f, BlurMaskFilter.Blur.NORMAL));
-        StaticLayout sl = new StaticLayout("" + text, p, (int) (bitmap.getWidth() * 0.95f), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        StaticLayout sl = new StaticLayout("" + text, p, (int) (bitmap.getWidth() * 0.90f), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
         sl.draw(canvas);
         //p.setMaskFilter(null);
         //sl = new StaticLayout(""+text,p,(int)(bitmap.getWidth()*0.95f), Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false);
@@ -495,7 +510,8 @@ public class zcProvider extends AppWidgetProvider {
 
         if (getBoolPref(context, "showHebDate", appWidgetId)) {
             hebrewFormat.setHebrewFormat(bHeb);
-            hebrewFormat.setTransliteratedMonthList(hebMonthsTrans);
+            hebrewFormat.setTransliteratedMonthList(hebMonthsTransl);
+            hebrewFormat.setTransliteratedParshiosList(parshiotTransl);
             Clock.addLabel(hebrewFormat.format(jewishCalendar),
                     getDimensPref(context, "szDate", appWidgetId),
                     getColorPref(context, "cDate", appWidgetId),
@@ -649,7 +665,7 @@ public class zcProvider extends AppWidgetProvider {
     }
 
     static String toNiqqud(String txt) {
-        String res = null;
+        String res = "";
         for (char c : txt.toCharArray())
             if (c < 0x041 || c == 0x05be || (c > 0x05af && c < 0x05eb && (c < 0x05bd || c > 0x05bf) && c != 0x05c3)) {
                 res += c;
@@ -675,6 +691,7 @@ public class zcProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
 
         context.startService(new Intent(zcService.ACTION_UPDATE));
 
