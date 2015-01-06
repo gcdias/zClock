@@ -53,9 +53,9 @@ public class zcZmanim {
             "Kislev", "Tevet", "Shevat", "Adar", "Adar II", "Adar I"};
 
     final String[] parshiotTransl = {
-            "Bereshit", "Noach", "Lech-Lecha", "Vayera", "Chaye-Sarah", "Toldot",
+            "Bereshit", "Noach", "Lech-Lecha", "Vayera", "Chaye-Sarah", "Toledot",
             "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi",
-            "Shemot", "Vaera", "Bo", "Beshalach", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki Tisa", "Vayakchel", "Pekude",
+            "Shemot", "Vaera", "Bo", "Beshalach", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki Tisa", "Vayakhel", "Pekudeh",
             "Vayikra", "Tzav", "Shmini", "Tazria", "Metzora", "Achrei Mos", "Kedoshim", "Emor", "Behar", "Bechukotai",
             "Bamidbar", "Naso", "Beha'alotcha", "Shelach", "Korach", "Chukat", "Balak", "Pinchas", "Matot", "Masei",
             "Devarim", "Vaetchanan", "Ekev", "Re'eh", "Shoftim", "Ki Tetze", "Ki Tavo", "Nitzavim", "Vayelech", "Ha'Azinu",
