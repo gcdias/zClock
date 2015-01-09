@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by GU on 30-12-2014.
@@ -61,7 +62,7 @@ public class zcZmanim {
             "Devarim", "Vaetchanan", "Ekev", "Re'eh", "Shoftim", "Ki Tetze", "Ki Tavo", "Nitzavim", "Vayelech", "Ha'Azinu",
             "Vayakchel Pekudei", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
             "Matot Masei", "Nitzavim Vayelech"};
-
+    private final GeoLocation HarHabait = new GeoLocation("Har Habait", 31.777972f, 35.235806f, 743, TimeZone.getTimeZone("Asia/Jerusalem"));
     private int mAppWidgetId;
     private Context mContext;
     private SharedPreferences mSharedPreferences;
@@ -77,7 +78,7 @@ public class zcZmanim {
     private timeLabels labHours;
     private timeLabels labZmanim;
     private timeLabels labSunEvents;
-
+    private int colorTheme;
     private long _ndtShift;
 
 
@@ -255,6 +256,7 @@ public class zcZmanim {
                     getStringPref("tsZmanim_main"),
                     getBoolPref("iZmanim_main"),
                     new Date[]{
+                            alotHarHabait,
                             zCalendar.getSunriseOffsetByDegrees(AstronomicalCalendar.ASTRONOMICAL_ZENITH - 11),
                             zCalendar.getSofZmanShma(sunsr[1], sunsr[0]),
                             zCalendar.getSofZmanTfila(sunsr[1], sunsr[0]),
@@ -291,7 +293,7 @@ public class zcZmanim {
             for (int n = 0; n < d; n++) {
                 v += Integer.valueOf(yom[n]);
             }
-            index = 1 + v + (int) (m * Integer.valueOf(yom[d]) / 1440);
+            index = 1 + v + m * Integer.valueOf(yom[d]) / 1440;
             pasuk = parsha[index];
             int iref = pasuk.indexOf(" ");
             pasukReference = (iref > 0) ? String.format("%s %s", getParshaHashavua(sysCalendar, true, true), pasuk.substring(0, iref)) : "error";
@@ -314,7 +316,7 @@ public class zcZmanim {
         renderBackground(bitmap, 0x20000000, 13);
 
         final Typeface tfStam = Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
-        int l = 0, index = 0;
+        int l = 0, index;
         int d = jCalendar.getDayOfWeek() - 1;
         int dm = (int) ((zCalendar.getSunset().getTime() - zCalendar.getSunrise().getTime()) / 60000);
         int m = (int) (System.currentTimeMillis() / 60000 % 1440);
@@ -328,7 +330,7 @@ public class zcZmanim {
             for (int n = 0; n < d; n++) {
                 v += Integer.valueOf(yom[n]);
             }
-            index = 1 + v + (int) (m * Integer.valueOf(yom[d]) / 1440);
+            index = 1 + v + m * Integer.valueOf(yom[d]) / 1440;
             //Log.e("Parashat", String.format("parsha %d day %d line %d/%d",i,d+1,v,index));
             pasuk = parsha[index];
             int iref = pasuk.indexOf(" ");

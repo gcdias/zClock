@@ -37,6 +37,7 @@ import net.sourceforge.zmanim.util.GeoLocation;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import pt.gu.zclock.zcService.gpsInfo;
 
@@ -63,6 +64,8 @@ public class zcProvider extends AppWidgetProvider {
             "Vayakchel Pekudei", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
             "Matot Masei", "Nitzavim Vayelech"};
 
+    static final GeoLocation HarHabait = new GeoLocation("Har Habait", 31.777972f, 35.235806f, 743, TimeZone.getTimeZone("Asia/Jerusalem"));
+
 
     public static zClock Clock;
     static RemoteViews remoteViews;
@@ -71,13 +74,11 @@ public class zcProvider extends AppWidgetProvider {
     private static ComplexZmanimCalendar zmanimCalendar;
     private static JewishCalendar jewishCalendar = new JewishCalendar();
     private static HebrewDateFormatter hebrewFormat = new HebrewDateFormatter();
+    private static Date alotHarHabait;
 
     private static boolean clockUpdated=false;
 
     static void updateWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
-        //int c=zcZmanim.getAverageColorFromCurrentWallpaper(context,20);
-        //Log.e("Color",String.format("#%06X", 0xFFFFFF & c));
 
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
@@ -155,10 +156,11 @@ public class zcProvider extends AppWidgetProvider {
                         Base64.decode(
                                 context.getResources().getStringArray(R.array.short_shemot)[type], Base64.DEFAULT), "UTF-8")
                         .split("\\r?\\n")[index];
-                if (wdgtSize.x > 2 * wdgtSize.y) {
+                /*if (wdgtSize.x > 2 * wdgtSize.y) {
                     s2 = new String[]{String.valueOf(index)};
                     f = 10f;
-                } else {
+                } else */
+                {
                     s2 = new String(
                             Base64.decode(
                                     context.getResources().getStringArray(R.array.long_shemot)[0], Base64.DEFAULT), "UTF-8")
@@ -193,10 +195,10 @@ public class zcProvider extends AppWidgetProvider {
     static Bitmap getCurrentPasuk(Context context, PointF size, int appWidgetId, int type, int fColor, int bColor) {
 
         Bitmap bitmap = Bitmap.createBitmap((int) size.x, (int) size.y, Bitmap.Config.ARGB_8888);
-        bitmap = renderBackground(bitmap, 0x20000000, 13);
+        bitmap = renderBackground(bitmap, 0x80000000, 13);
 
         final Typeface tfStam = Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
-        int l = 0, index = 0;
+        int l = 0, index;
         int d = jewishCalendar.getDayOfWeek() - 1;
         int dm = (int) ((zmanimCalendar.getSunset().getTime() - zmanimCalendar.getSunrise().getTime()) / 60000);
         int m = (int) (sysCalendar.getTime().getTime() / 60000) % 1440;
@@ -227,9 +229,9 @@ public class zcProvider extends AppWidgetProvider {
             return bitmap;
         }
 
-        renderTextBlock(bitmap, tfStam, ref, 0x80ffffff, 32f, bitmap.getHeight() * 0.9f - 26f);
+        renderTextBlock(bitmap, tfStam, ref, 0xa0ffffff, 32f, bitmap.getHeight() * 0.9f - 26f);
 
-        return renderTextBlock(bitmap, tfStam, pasuk, 0xa0ffffff, 50f, 0);
+        return renderTextBlock(bitmap, tfStam, pasuk, 0xffffffff, 50f, 0);
 
     }
 
@@ -390,6 +392,8 @@ public class zcProvider extends AppWidgetProvider {
         Canvas canvas = new Canvas(bitmap);
 
         Log.e("Draw Parsha", text);
+        float slmargin = bitmap.getWidth() * 0.10f;
+        float slwidth = bitmap.getWidth() * 0.90f;
         TextPaint p = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(color);
         p.setTypeface(typeface);
@@ -397,7 +401,13 @@ public class zcProvider extends AppWidgetProvider {
         canvas.translate(-12, 12 + yPos);
         canvas.save();
         //p.setMaskFilter(new BlurMaskFilter(7f, BlurMaskFilter.Blur.NORMAL));
-        StaticLayout sl = new StaticLayout("" + text, p, (int) (bitmap.getWidth() * 0.90f), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        StaticLayout sl;
+        do {
+            sl = new StaticLayout("" + text, p, (int) slwidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+            size -= 1;
+            p.setTextSize(size);
+        } while ((sl.getHeight() > bitmap.getHeight() * 0.9f));
+
         sl.draw(canvas);
         //p.setMaskFilter(null);
         //sl = new StaticLayout(""+text,p,(int)(bitmap.getWidth()*0.95f), Layout.Alignment.ALIGN_NORMAL,1.0f,0.0f,false);
@@ -566,6 +576,8 @@ public class zcProvider extends AppWidgetProvider {
 
         GeoLocation geoLocation = new GeoLocation(sysCalendar.getTimeZone().toString(),
                 zcService.gps_info.lat, zcService.gps_info.lng, zcService.gps_info.alt, sysCalendar.getTimeZone());
+
+        alotHarHabait = new ComplexZmanimCalendar(HarHabait).getAlos72();
         zmanimCalendar = new ComplexZmanimCalendar(geoLocation);
 
     }
@@ -651,6 +663,7 @@ public class zcProvider extends AppWidgetProvider {
                     getStringPref(context, "tsZmanim_main", appWidgetId),
                     getBoolPref(context, "iZmanim_main", appWidgetId),
                     new Date[]{
+                            alotHarHabait,
                             zmanimCalendar.getSunriseOffsetByDegrees(AstronomicalCalendar.ASTRONOMICAL_ZENITH - 11),
                             zmanimCalendar.getSofZmanShma(sunsr[1], sunsr[0]),
                             zmanimCalendar.getSofZmanTfila(sunsr[1], sunsr[0]),
