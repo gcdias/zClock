@@ -13,6 +13,9 @@
 	<PreferenceScreen
 		android:summary="@string/ps_sumClockLayout"
 		android:title="@string/psClockLayout">
+		<CheckBoxPreference
+			android:key="bWhiteOnBlack"
+			android:title="@string/pbWhiteOnBlack"/>
 		<PreferenceCategory android:title="@string/pc_tTime">
 			<pt.gu.zclock.ColorPreference
 				android:defaultValue="@color/cTime"

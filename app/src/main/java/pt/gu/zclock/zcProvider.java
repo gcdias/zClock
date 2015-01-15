@@ -113,25 +113,37 @@ public class zcProvider extends AppWidgetProvider {
         sysCalendar.add(Calendar.MINUTE, (int) ((86400000 - newday % 86400000) / 60000));
         jewishCalendar.setDate(sysCalendar);
 
+        boolean bkgDark = getBoolPref(context, "bWhiteOnBlack", appWidgetId);
+
         if (cMode < 3) {
 
             if (Clock == null || nday || !clockUpdated) setupClockPrefs(context, appWidgetId);
 
             if (getBoolPref(context, "show72Hashem", appWidgetId))
                 Clock.setBackgroundPicture(
-                        getHashemNames(context, Clock.getPxClock(), appWidgetId, HASHEM_72, 0x08ffffff, 0));
+                        getHashemNames(context, Clock.getPxClock(), appWidgetId, HASHEM_72, bkgDark ? 0x08ffffff : 0x08000000, 0));
 
             remoteViews.setImageViewBitmap(R.id.imageView, Clock.draw());
         }
 
         if (cMode == 3) remoteViews.setImageViewBitmap(
-                R.id.imageView, getHashemNames(context, getWidgetSizePrefs(context, appWidgetId, true), appWidgetId, HASHEM_72, 0xffffffff, 0x80000000));
+                R.id.imageView, getHashemNames(
+                        context, getWidgetSizePrefs(
+                                context, appWidgetId, true),
+                        appWidgetId, HASHEM_72, bkgDark ? 0xffffffff : 0xff000000, bkgDark ? 0x80000000 : 0x80ffffff));
 
         if (cMode == 4) remoteViews.setImageViewBitmap(
-                R.id.imageView, getHashemNames(context, getWidgetSizePrefs(context, appWidgetId, true), appWidgetId, HASHEM_42, 0xffffffff, 0x80000000));
+                R.id.imageView, getHashemNames(
+                        context, getWidgetSizePrefs(
+                                context, appWidgetId, true),
+                        appWidgetId, HASHEM_42, bkgDark ? 0xffffffff : 0xff000000, bkgDark ? 0x80000000 : 0x80ffffff));
 
         if (cMode == 5)
-            remoteViews.setImageViewBitmap(R.id.imageView, getCurrentPasuk(context, getWidgetSizePrefs(context, appWidgetId, true), appWidgetId, 0, 0xffffffff, 0x80000000));
+            remoteViews.setImageViewBitmap(
+                    R.id.imageView, getCurrentPasuk(
+                            context, getWidgetSizePrefs(
+                                    context, appWidgetId, true),
+                            appWidgetId, 0, bkgDark ? 0xffffffff : 0xff000000, bkgDark ? 0x80000000 : 0x80ffffff));
 
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
@@ -194,8 +206,9 @@ public class zcProvider extends AppWidgetProvider {
 
     static Bitmap getCurrentPasuk(Context context, PointF size, int appWidgetId, int type, int fColor, int bColor) {
 
+        boolean bkgDark = getBoolPref(context, "bWhiteOnBlack", appWidgetId);
         Bitmap bitmap = Bitmap.createBitmap((int) size.x, (int) size.y, Bitmap.Config.ARGB_8888);
-        bitmap = renderBackground(bitmap, 0x80000000, 13);
+        bitmap = renderBackground(bitmap, bkgDark ? 0x80000000 : 0x80ffffff, 13);
 
         final Typeface tfStam = Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
         int l = 0, index;
@@ -229,9 +242,9 @@ public class zcProvider extends AppWidgetProvider {
             return bitmap;
         }
 
-        renderTextBlock(bitmap, tfStam, ref, 0xa0ffffff, 32f, bitmap.getHeight() * 0.9f - 26f);
+        renderTextBlock(bitmap, tfStam, ref, bkgDark ? 0xa0ffffff : 0xa0000000, 32f, bitmap.getHeight() * 0.9f - 26f);
 
-        return renderTextBlock(bitmap, tfStam, pasuk, 0xffffffff, 50f, 0);
+        return renderTextBlock(bitmap, tfStam, pasuk, bkgDark ? 0xffffffff : 0xff000000, 50f, 0);
 
     }
 
@@ -586,6 +599,7 @@ public class zcProvider extends AppWidgetProvider {
     static void setZmanimMarks(Context context, int appWidgetId) {
 
         final Typeface tfCondN = Typeface.create(context.getString(R.string.font_condensed), Typeface.NORMAL);
+        final Typeface tfLight = Typeface.create(context.getString(R.string.font_light), Typeface.NORMAL);
         final Typeface tfRegularB = Typeface.create(context.getString(R.string.font_regular), Typeface.BOLD);
 
         Clock.resetTimeMarks();
@@ -657,7 +671,7 @@ public class zcProvider extends AppWidgetProvider {
 
         if (getBoolPref(context, "showZmanim", appWidgetId)) {
 
-            Clock.addMarks(tfCondN,
+            Clock.addMarks(tfLight,
                     getColorPref(context, "cZmanim_main", appWidgetId),
                     getDimensPref(context, "szZmanim_main", appWidgetId),
                     getStringPref(context, "tsZmanim_main", appWidgetId),

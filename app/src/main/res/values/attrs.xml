@@ -8,7 +8,7 @@
 		<attr name="vRes" format="integer"/>
 		<attr name="Res" format="integer"/>
 		</declare-styleable>
-	<declare-styleable name="ColorThemePreference">
-		<attr name="cGrade" format="reference"/>
+	<declare-styleable name="ColorPicker">
+		<attr name="items" format="reference"/>
 	</declare-styleable>
 </resources>

@@ -47,4 +47,5 @@
 	<string name="pRemoveAll">Remove All</string>
 	<string name="pBClockElapsedTime">Progress shows Elapsed Time / Remain Time</string>
 	<string name="psumBClockElapsedTime">Progress shows Elapsed Time (checked) or Remain Time (unckecked)</string>
+	<string name="pbWhiteOnBlack">White Letters on Black Background</string>
 </resources>

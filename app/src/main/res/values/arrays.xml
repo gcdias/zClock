@@ -237,8 +237,8 @@
 		<item>Sienna</item>
 	</string-array>
 	<string-array name="acolorsHexValues">
-		<item name="lime">#A4C400</item>
-		<item name="green">#60A917</item>
+		<item>#A4C400</item>
+		<item>#60A917</item>
 		<item>#008A00</item>
 		<item>#00ABA9</item>
 		<item>#1BA1E2</item>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
 	<integer name="clockMode">0</integer>
 	<integer name="zmanimMode">2</integer>
 	<integer name="nShemot">20</integer>
@@ -13,14 +14,14 @@
 	<dimen name="wClockFrame">3dp</dimen>
 	<dimen name="wClockPointer">2dp</dimen>
 
-	<dimen name="szZmanim_sun">7dp</dimen>
+	<dimen name="szZmanim_sun">6dp</dimen>
 	<dimen name="szZmanim_main">6dp</dimen>
 	<dimen name="szZmanimAlotTzet">6dp</dimen>
-	<dimen name="szTimemarks">5.5dp</dimen>
-	<dimen name="szTime">54dp</dimen>
-	<dimen name="szDate">14dp</dimen>
-	<dimen name="szParshat">12dp</dimen>
-	<dimen name="szShemot">144dp</dimen>
+	<dimen name="szTimemarks">5dp</dimen>
+	<dimen name="szTime">32dp</dimen>
+	<dimen name="szDate">12dp</dimen>
+	<dimen name="szParshat">10dp</dimen>
+	<dimen name="szShemot">72dp</dimen>
 
 
 	<string name="tsZmanim_sun">HH:mm</string>
@@ -28,6 +29,7 @@
 	<string name="tsZmanimAlotTzet">HH:mm</string>
 	<string name="tsTimemarks">HH</string>
 
+	<bool name="bWhiteOnBlack">false</bool>
 	<bool name="iZmanim_sun">false</bool>
 	<bool name="iZmanim_main">false</bool>
 	<bool name="iZmanimAlotTzet">false</bool>

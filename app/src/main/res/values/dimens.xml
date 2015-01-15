@@ -9,4 +9,5 @@
 	<dimen name="pointer_thickness">0.15dp</dimen>
 	<dimen name="zmanimMaxTextWidth">33dp</dimen>
 
+	<integer name="colorGridColumnWidth">6</integer>
 </resources>

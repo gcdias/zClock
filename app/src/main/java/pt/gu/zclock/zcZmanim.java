@@ -62,6 +62,7 @@ public class zcZmanim {
             "Devarim", "Vaetchanan", "Ekev", "Re'eh", "Shoftim", "Ki Tetze", "Ki Tavo", "Nitzavim", "Vayelech", "Ha'Azinu",
             "Vayakchel Pekudei", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
             "Matot Masei", "Nitzavim Vayelech"};
+
     private final GeoLocation HarHabait = new GeoLocation("Har Habait", 31.777972f, 35.235806f, 743, TimeZone.getTimeZone("Asia/Jerusalem"));
     private int mAppWidgetId;
     private Context mContext;
@@ -112,13 +113,14 @@ public class zcZmanim {
         Bitmap bitmap = this.createWidgetBitmap((mMode < 3));
         final Typeface tfStam = Typeface.createFromAsset(mContext.getAssets(), "fonts/sefstm.ttf");
 
+        boolean bkgDark = getBoolPref("bWhiteOnBlack");
         if (mMode < 3) {
 
             if (getBoolPref("show72Hashem")) {
                 int index = (int) (sysCalendar.getTime().getTime() / 60000 / getIntPref("nShemot")) % 72;
                 String name = decodeResourceArray(R.array.short_shemot, HASHEM_72).split("\\r?\\n")[index];
                 String verses = decodeResourceArray(R.array.long_shemot, 0);
-                renderBackground(bitmap, 0x80000000, 3f);
+                renderBackground(bitmap, bkgDark ? 0x80000000 : 0x80ffffff, 3f);
                 Rect bounds = new Rect();
                 renderTextLine(bitmap,
                         new labelFormat(tfStam, 0x08ffffff, 0f),
@@ -134,7 +136,7 @@ public class zcZmanim {
                 }
             }
             renderClock(bitmap, mClockLayout);
-            
+
         }
         return bitmap;
     }

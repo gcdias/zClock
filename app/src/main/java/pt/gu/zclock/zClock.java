@@ -58,6 +58,7 @@ public class zClock {
     private float   szTimeLabPad=10f;
     private long    newDayTimeMilis;
     private Bitmap  backgroundBitmap=null;
+    private float lineFeed = 22f;
     private List<timeLabel> timeMarks = new ArrayList<>();
     private List<dateLabel> Labels = new ArrayList<>();
 
@@ -189,31 +190,33 @@ public class zClock {
         //Draw timemarks
         timeMarkPaths();
         for (timeLabel z : timeMarks) {
+            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_DIP, z.size);
             tp.setColor(z.color);
-            tp.setTextSize(z.size);
+            tp.setTextSize(lineFeed);
             tp.setTypeface(z.type);
             tp.setTextAlign((z.alignRight) ? Paint.Align.RIGHT : Paint.Align.LEFT);
             canvas.drawTextOnPath(z.toString(), z.path, 0, 0, tp);
         }
 
+
         //Draw Current Time
         tp.setTypeface(typeTime);
         tp.setTextAlign(Paint.Align.CENTER);
-        tp.setTextSize(szTime);
+        tp.setTextSize(applyDimension(TypedValue.COMPLEX_UNIT_DIP, szTime));
         tp.setColor(cTime);
         s = new SimpleDateFormat("HH:mm").format(new Date());
         tp.getTextBounds(s, 0, s.length(), bounds);
         line = centro.y + bounds.height() / 2;  // -(tp.ascent()+tp.descent())/2;
         canvas.drawText(s, centro.x, line, tp);
 
-        line += 22f;
         //Draw Labels
         for (dateLabel t : Labels) {
+            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_DIP, t.size);
             tp.setTypeface(t.type);
             tp.setColor(t.color);
-            tp.setTextSize(t.size);
+            tp.setTextSize(lineFeed);
             tp.getTextBounds(t.label, 0, t.label.length(), bounds);
-            line += 22f + bounds.height() / 2;// -(tp.ascent()+tp.descent())/2;
+            line += 1.5f * bounds.height();// -(tp.ascent()+tp.descent())/2;
             canvas.drawText(t.label, centro.x, line, tp);
         }
 
@@ -235,7 +238,7 @@ public class zClock {
 
     public void updateTimeMarks() {
         textMarksMaxWidth = getMaxTextWidth();
-        raio = (int) (Math.min(pxClock.x / 2, pxClock.y / 2) - textMarksMaxWidth[0] - szFrame);
+        raio = (int) (Math.min(pxClock.x / 2, pxClock.y / 2) - textMarksMaxWidth[0] - szFrame - szTimeLabPad);
         this.patFrame = renderDashPathEffect(this.raio);
         timeMarkPaths();
     }
@@ -244,8 +247,9 @@ public class zClock {
         float res_out = 0f, res_in = 0f;
         Paint tp = new Paint();
         for (timeLabel z : timeMarks) {
+            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_DIP, z.size);
             tp.setTypeface(z.type);
-            tp.setTextSize(z.size);
+            tp.setTextSize(lineFeed);
             if (z.insideFrame)
                 res_in = Math.max(res_in, tp.measureText(z.toString()));
             else

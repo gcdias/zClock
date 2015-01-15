@@ -178,6 +178,7 @@ public class zcPreferences extends Activity implements SharedPreferences.OnShare
         loadPref(ctx,PREF_BOOLEAN,"showTimeMarks",appWidgetId);
         loadPref(ctx,PREF_BOOLEAN,"bLangHebrew",appWidgetId);
         loadPref(ctx, PREF_BOOLEAN, "bClockElapsedTime", appWidgetId);
+        loadPref(ctx, PREF_BOOLEAN, "bWhiteOnBlack", appWidgetId);
 
         loadPref(ctx,PREF_INT,"nShemot",appWidgetId);
     }
@@ -293,6 +294,7 @@ public class zcPreferences extends Activity implements SharedPreferences.OnShare
         savePref(ctx,PREF_BOOLEAN,"show72Hashem",appWidgetId);
         savePref(ctx,PREF_BOOLEAN,"bLangHebrew",appWidgetId);
         savePref(ctx, PREF_BOOLEAN, "bClockElapsedTime", appWidgetId);
+        savePref(ctx, PREF_BOOLEAN, "bWhiteOnBlack", appWidgetId);
 
         savePref(ctx,PREF_INT,"nShemot",appWidgetId);
     }
