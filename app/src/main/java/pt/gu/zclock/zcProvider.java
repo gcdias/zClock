@@ -58,10 +58,10 @@ public class zcProvider extends AppWidgetProvider {
             "Bereshit", "Noach", "Lech-Lecha", "Vayera", "Chaye-Sarah", "Toldot",
             "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi",
             "Shemot", "Vaera", "Bo", "Beshalach", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki Tisa", "Vayakchel", "Pekude",
-            "Vayikra", "Tzav", "Shmini", "Tazria", "Metzora", "Achrei Mos", "Kedoshim", "Emor", "Behar", "Bechukotai",
-            "Bamidbar", "Naso", "Beha'alotcha", "Shelach", "Korach", "Chukat", "Balak", "Pinchas", "Matot", "Masei",
-            "Devarim", "Vaetchanan", "Ekev", "Re'eh", "Shoftim", "Ki Tetze", "Ki Tavo", "Nitzavim", "Vayelech", "Ha'Azinu",
-            "Vayakchel Pekudei", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
+            "Vayikra", "Tzav", "Shemini", "Tazria", "Metzora", "Achre Mot", "Kedoshim", "Emor", "Behar", "Bechukotai",
+            "Bamidbar", "Naso", "Behaalotcha", "Shelach", "Korach", "Chukat", "Balak", "Pinchas", "Matot", "Masei",
+            "Devarim", "Vaetchanan", "Ekev", "Reeh", "Shoftim", "Ki Tetze", "Ki Tavo", "Nitzavim", "Vayelech", "HaAzinu",
+            "Vayakchel Pekude", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
             "Matot Masei", "Nitzavim Vayelech"};
 
     static final GeoLocation HarHabait = new GeoLocation("Har Habait", 31.777972f, 35.235806f, 743, TimeZone.getTimeZone("Asia/Jerusalem"));

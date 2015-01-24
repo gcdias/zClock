@@ -16,17 +16,17 @@ import android.widget.TextView;
  *
  * @author Jake Wharton
  */
-public class ColorPreference extends DialogPreference implements OnSeekBarChangeListener,View.OnLongClickListener{
+public class ColorPreference extends DialogPreference implements OnSeekBarChangeListener, View.OnLongClickListener {
 
     /**
      * Color preview at top of dialog.
      */
     private SurfaceView mPreview;
 
-    private SeekBar mA,mH,mS,mV;
-    private int resA=10,resH=10,resS=10,resV=10;
+    private SeekBar mA, mH, mS, mV;
+    private int resA = 10, resH = 10, resS = 10, resV = 10;
 
-    private TextView mAValue,mHValue,mSValue,mVValue;
+    private TextView mAValue, mHValue, mSValue, mVValue;
 
     private int mColor;
 
@@ -37,7 +37,7 @@ public class ColorPreference extends DialogPreference implements OnSeekBarChange
      * Create a new instance of the ColorPreference.
      *
      * @param context Context.
-     * @param attrs Attributes.
+     * @param attrs   Attributes.
      */
     public ColorPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -49,66 +49,68 @@ public class ColorPreference extends DialogPreference implements OnSeekBarChange
 
     private void setAttrs(AttributeSet attrs) {
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ColorPreference);
-        int res =a.getInt(R.styleable.ColorPreference_Res, 10);
+        int res = a.getInt(R.styleable.ColorPreference_Res, 10);
         resA = a.getInt(R.styleable.ColorPreference_aRes, res);
         resH = a.getInt(R.styleable.ColorPreference_hRes, res);
         resS = a.getInt(R.styleable.ColorPreference_sRes, res);
         resV = a.getInt(R.styleable.ColorPreference_vRes, res);
     }
 
-
-
     @Override
     protected void onBindDialogView(final View view) {
         super.onBindDialogView(view);
 
-        this.mPreview = (SurfaceView)view.findViewById(R.id.preview);
+        this.mPreview = (SurfaceView) view.findViewById(R.id.preview);
         this.mPreview.setBackgroundColor(this.mColor);
 
-        float hsv[]=new float[3];
-        Color.colorToHSV(this.mColor,hsv);
+        float hsv[] = new float[3];
+        Color.colorToHSV(this.mColor, hsv);
 
-        this.mA = (SeekBar)view.findViewById(R.id.colpref_a);
-        this.mA.setMax((int)(250/resA));
-        this.mA.setProgress((int)(Color.alpha(this.mColor)/resA));
+        this.mA = (SeekBar) view.findViewById(R.id.colpref_a);
+        this.mA.setMax((int) (250 / resA));
+        this.mA.setProgress((int) (Color.alpha(this.mColor) / resA));
         this.mA.setOnSeekBarChangeListener(this);
 
-        this.mH = (SeekBar)view.findViewById(R.id.colpref_h);
-        this.mH.setMax((int)(360/resH));
-        this.mH.setProgress((int)(hsv[0]/resH));
+        this.mH = (SeekBar) view.findViewById(R.id.colpref_h);
+        this.mH.setMax((int) (360 / resH));
+        this.mH.setProgress((int) (hsv[0] / resH));
         this.mH.setOnSeekBarChangeListener(this);
 
-        this.mS = (SeekBar)view.findViewById(R.id.colpref_s);
-        this.mS.setMax((int)(100/resS));
-        this.mS.setProgress((int)(hsv[1]*100/resS));
+        this.mS = (SeekBar) view.findViewById(R.id.colpref_s);
+        this.mS.setMax((int) (100 / resS));
+        this.mS.setProgress((int) (hsv[1] * 100 / resS));
         this.mS.setOnSeekBarChangeListener(this);
 
-        this.mV = (SeekBar)view.findViewById(R.id.colpref_v);
-        this.mV.setMax((int)(100/resV));
-        this.mV.setProgress((int)(hsv[2]*100/resV));
+        this.mV = (SeekBar) view.findViewById(R.id.colpref_v);
+        this.mV.setMax((int) (100 / resV));
+        this.mV.setProgress((int) (hsv[2] * 100 / resV));
         this.mV.setOnSeekBarChangeListener(this);
 
-        this.mAValue = (TextView)view.findViewById(R.id.colpref_a_value);
+        this.mAValue = (TextView) view.findViewById(R.id.colpref_a_value);
         this.mAValue.setText(String.valueOf(Color.alpha(this.mColor)));
         this.mAValue.setOnLongClickListener(this);
-        this.mHValue = (TextView)view.findViewById(R.id.colpref_h_value);
-        this.mHValue.setText(String.valueOf((int)hsv[0]));
-        this.mSValue = (TextView)view.findViewById(R.id.colpref_s_value);
-        this.mSValue.setText(String.valueOf((int)(hsv[1]*100)));
-        this.mVValue = (TextView)view.findViewById(R.id.colpref_v_value);
-        this.mVValue.setText(String.valueOf((int)(hsv[2]*100)));
+        this.mHValue = (TextView) view.findViewById(R.id.colpref_h_value);
+        this.mHValue.setText(String.valueOf((int) hsv[0]));
+        this.mSValue = (TextView) view.findViewById(R.id.colpref_s_value);
+        this.mSValue.setText(String.valueOf((int) (hsv[1] * 100)));
+        this.mVValue = (TextView) view.findViewById(R.id.colpref_v_value);
+        this.mVValue.setText(String.valueOf((int) (hsv[2] * 100)));
     }
 
-    public void onStopTrackingTouch(SeekBar seekBar) {}
-    public void onStartTrackingTouch(SeekBar seekBar) {}
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    }
+
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-        final int a = ColorPreference.this.mA.getProgress()*resA;
-        final float h = ColorPreference.this.mH.getProgress()*resH;
-        final float s = ColorPreference.this.mS.getProgress()*resS;
-        final float v = ColorPreference.this.mV.getProgress()*resV;
+        final int a = ColorPreference.this.mA.getProgress() * resA;
+        final float h = ColorPreference.this.mH.getProgress() * resH;
+        final float s = ColorPreference.this.mS.getProgress() * resS;
+        final float v = ColorPreference.this.mV.getProgress() * resV;
 
-        final int color = Color.HSVToColor(a,new float[]{h,s/100,v/100});
+        final int color = Color.HSVToColor(a, new float[]{h, s / 100, v / 100});
 
         ColorPreference.this.mAValue.setText(String.valueOf(a));
         ColorPreference.this.mHValue.setText(String.valueOf(h));
@@ -130,7 +132,7 @@ public class ColorPreference extends DialogPreference implements OnSeekBarChange
 
     @Override
     protected void onSetInitialValue(final boolean restore, final Object defaultValue) {
-        final int color = this.getPersistedInt(defaultValue == null ? 0 : (Integer)defaultValue);
+        final int color = this.getPersistedInt(defaultValue == null ? 0 : (Integer) defaultValue);
         this.mColor = color;
     }
 
@@ -166,7 +168,7 @@ public class ColorPreference extends DialogPreference implements OnSeekBarChange
         this.persistInt(color);
     }
 
-    public int getColor(){
+    public int getColor() {
         return mColor;
     }
 }
