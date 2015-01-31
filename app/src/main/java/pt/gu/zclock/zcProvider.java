@@ -242,9 +242,9 @@ public class zcProvider extends AppWidgetProvider {
             return bitmap;
         }
 
-        renderTextBlock(bitmap, tfStam, ref, bkgDark ? 0xa0ffffff : 0xa0000000, 32f, bitmap.getHeight() * 0.9f - 26f);
+        renderTextBlock(bitmap, tfStam, ref, bkgDark ? 0xa0ffffff : 0xa0000000, 28f, bitmap.getHeight() * 0.92f - 26f);
 
-        return renderTextBlock(bitmap, tfStam, pasuk, bkgDark ? 0xffffffff : 0xff000000, 50f, 0);
+        return renderTextBlock(bitmap, tfStam, pasuk, bkgDark ? 0xffffffff : 0xff000000, 42f, 0);
 
     }
 
@@ -352,7 +352,7 @@ public class zcProvider extends AppWidgetProvider {
             } else p.setTextSize(title_size);
             p.setColor(title_color);
             p.getTextBounds(title, 0, title.length(), b);
-            y_pos = centro.y * 0.75f - b.centerY();
+            y_pos = centro.y + b.centerY()/4;
             if (glowSteps > 0) {
                 float blur_rad = Clock.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 22 / glowSteps);
                 p.setAlpha(128);
@@ -373,10 +373,11 @@ public class zcProvider extends AppWidgetProvider {
             if (subtitle_size == 0) {
                 p.setTextSize(100);
                 p.getTextBounds(subtitle[0], 0, subtitle[0].length(), b);
-                p.setTextSize(Math.min(80 * size.x / b.width(), 50 * size.y / b.height() / subtitle.length));
-            } else p.setTextSize(subtitle_size);
+                subtitle_size = Math.min(80 * size.x / b.width(), 50 * size.y / b.height() / subtitle.length);
+            }
+            p.setTextSize(subtitle_size);
             p.getTextBounds(subtitle[0], 0, subtitle[0].length(), b);
-            y_pos += size.y / 22f;
+            y_pos = size.y*0.56f;
             for (String st : subtitle) {
                 p.setColor(subtitle_color);
                 canvas.drawText(st, centro.x, y_pos - 2.5f * (p.descent() + p.ascent()), p);
@@ -403,23 +404,24 @@ public class zcProvider extends AppWidgetProvider {
                                   int color, float size, float yPos) {
 
         Canvas canvas = new Canvas(bitmap);
+        float margin=0.9f;
 
         Log.e("Draw Parsha", text);
-        float slmargin = bitmap.getWidth() * 0.10f;
-        float slwidth = bitmap.getWidth() * 0.90f;
+        float slmargin = bitmap.getWidth() * (1-margin);
+        float slwidth = bitmap.getWidth() * margin;
         TextPaint p = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         p.setColor(color);
         p.setTypeface(typeface);
         p.setTextSize(size);
-        canvas.translate(-12, 12 + yPos);
+        canvas.translate(slmargin/2, yPos);
         canvas.save();
         //p.setMaskFilter(new BlurMaskFilter(7f, BlurMaskFilter.Blur.NORMAL));
         StaticLayout sl;
         do {
-            sl = new StaticLayout("" + text, p, (int) slwidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+            sl = new StaticLayout("" + text, p, (int) slwidth, Layout.Alignment.ALIGN_NORMAL, margin, 0.0f, false);
             size -= 1;
             p.setTextSize(size);
-        } while ((sl.getHeight() > bitmap.getHeight() * 0.9f));
+        } while ((sl.getHeight() > bitmap.getHeight() * margin));
 
         sl.draw(canvas);
         //p.setMaskFilter(null);
