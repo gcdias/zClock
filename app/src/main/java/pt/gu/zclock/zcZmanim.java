@@ -60,7 +60,7 @@ public class zcZmanim {
             "Vayikra", "Tzav", "Shmini", "Tazria", "Metzora", "Achre Mot", "Kedoshim", "Emor", "Behar", "Bechukotai",
             "Bamidbar", "Naso", "Beha'alotcha", "Shelach", "Korach", "Chukat", "Balak", "Pinchas", "Matot", "Masei",
             "Devarim", "Vaetchanan", "Ekev", "Re'eh", "Shoftim", "Ki Tetze", "Ki Tavo", "Nitzavim", "Vayelech", "Ha'Azinu",
-            "Vayakchel Pekudei", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
+            "Vayakchel-Pekudei", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
             "Matot Masei", "Nitzavim Vayelech"};
 
     private final GeoLocation HarHabait = new GeoLocation("Har Habait", 31.777972f, 35.235806f, 743, TimeZone.getTimeZone("Asia/Jerusalem"));

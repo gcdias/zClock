@@ -140,10 +140,13 @@ public class zcProvider extends AppWidgetProvider {
 
         if (cMode == 5)
             remoteViews.setImageViewBitmap(
-                    R.id.imageView, getCurrentPasuk(
+                    R.id.imageView, renderPasuk(
                             context, getWidgetSizePrefs(
                                     context, appWidgetId, true),
                             appWidgetId, 0, bkgDark ? 0xffffffff : 0xff000000, bkgDark ? 0x80000000 : 0x80ffffff));
+
+        if (cMode ==6)
+
 
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
@@ -204,13 +207,23 @@ public class zcProvider extends AppWidgetProvider {
                 glowSteps, colorBackground, 13);
     }
 
-    static Bitmap getCurrentPasuk(Context context, PointF size, int appWidgetId, int type, int fColor, int bColor) {
+    static Bitmap renderPasuk(Context context, PointF size, int appWidgetId, int type, int fColor, int bColor) {
 
         boolean bkgDark = getBoolPref(context, "bWhiteOnBlack", appWidgetId);
         Bitmap bitmap = Bitmap.createBitmap((int) size.x, (int) size.y, Bitmap.Config.ARGB_8888);
         bitmap = renderBackground(bitmap, bkgDark ? 0x80000000 : 0x80ffffff, 13);
 
         final Typeface tfStam = Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
+
+        String[] currentPasuk = getCurrentPasuk(context,1);
+
+        renderTextBlock(bitmap, tfStam, currentPasuk[0], bkgDark ? 0xa0ffffff : 0xa0000000, 28f, bitmap.getHeight() * 0.92f - 26f);
+
+        return renderTextBlock(bitmap, tfStam, currentPasuk[1], bkgDark ? 0xffffffff : 0xff000000, 42f, 0);
+
+    }
+
+    private static String[] getCurrentPasuk(Context context,int mode) {
         int l = 0, index;
         int d = jewishCalendar.getDayOfWeek() - 1;
         int dm = (int) ((zmanimCalendar.getSunset().getTime() - zmanimCalendar.getSunrise().getTime()) / 60000);
@@ -218,9 +231,21 @@ public class zcProvider extends AppWidgetProvider {
         String pasuk, ref;
         try {
             int i = getParshaHashavuaIndex(sysCalendar);
+            Log.e("Parsha index",String.valueOf(i));
             String[] source = context.getResources().getStringArray(R.array.torah)[i].split("#");
-            String[] parsha = new String(Base64.decode(source[1], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
             String[] yom = new String(Base64.decode(source[0], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
+            String[] parsha;
+            if (i>52) {
+                String[] p = source[1].split("\\r?\\n");
+                String[] p1 = new String(Base64.decode(p[0], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
+                String[] p2 = new String(Base64.decode(p[1], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
+                parsha = new String[p1.length+p2.length];
+                System.arraycopy(p1,0,parsha,0,p1.length);
+                System.arraycopy(p2,0,parsha,p1.length,p2.length);
+            } else {
+                parsha = new String(Base64.decode(source[1], Base64.DEFAULT), "UTF-8").split("\\r?\\n");
+            }
+
             int v = 0;
             for (int n = 0; n < d; n++) {
                 v += Integer.valueOf(yom[n]);
@@ -230,22 +255,20 @@ public class zcProvider extends AppWidgetProvider {
             pasuk = parsha[index];
             int iref = pasuk.indexOf(" ");
             ref = (iref > 0) ? String.format("%s %s", getParshaHashavua(sysCalendar, true, true), pasuk.substring(0, iref)) : "error";
-            pasuk = (iref > 0) ? toNiqqud(pasuk.substring(iref + 1)) : String.format("ERRO %d/%d", index, l);
+            pasuk = (iref > 0) ? pasuk.substring(iref + 1) : String.format("ERRO %d/%d", index, l);
+            if (mode ==1) pasuk = toNiqqud(pasuk);
+            if (mode >1) pasuk = toOtiot(pasuk);
         } catch (UnsupportedEncodingException ignored) {
             Log.e("Encoding Error", "");
-            return bitmap;
+            return null;
         } catch (ArrayIndexOutOfBoundsException ignored) {
             Toast.makeText(context, "Parashat Hashavua resource is missing", Toast.LENGTH_LONG).show();
-            return bitmap;
+            return null;
         } catch (StringIndexOutOfBoundsException ignored) {
             Log.e("String Index out of Bounds", "");
-            return bitmap;
+            return null;
         }
-
-        renderTextBlock(bitmap, tfStam, ref, bkgDark ? 0xa0ffffff : 0xa0000000, 28f, bitmap.getHeight() * 0.92f - 26f);
-
-        return renderTextBlock(bitmap, tfStam, pasuk, bkgDark ? 0xffffffff : 0xff000000, 42f, 0);
-
+        return new String[]{ref,pasuk};
     }
 
     static String getParshaHashavua(Calendar c, boolean inHebrew, boolean parshaNameOnly) {
@@ -702,6 +725,14 @@ public class zcProvider extends AppWidgetProvider {
         return res;
     }
 
+    static String toOtiot(String txt) {
+        String res = "";
+        for (char c : txt.toCharArray()) {
+            if (c > 0x05ef && c < 0x05eb) res += c;
+        }
+        return res;
+    }
+
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);
@@ -819,5 +850,3 @@ public class zcProvider extends AppWidgetProvider {
     }
 
 }
-
-
