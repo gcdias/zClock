@@ -265,7 +265,7 @@ public class zcProvider extends AppWidgetProvider {
             Toast.makeText(context, "Parashat Hashavua resource is missing", Toast.LENGTH_LONG).show();
             return null;
         } catch (StringIndexOutOfBoundsException ignored) {
-            Log.e("String Index out of Bounds", "");
+            Log.e("Index out of Bounds", "");
             return null;
         }
         return new String[]{ref,pasuk};
@@ -604,7 +604,7 @@ public class zcProvider extends AppWidgetProvider {
     static void updateLocation(Context context) {
         zcService.gps_info = new gpsInfo(context);
         zcService.gps_info.update();
-        Log.e("zcProvider.updateLocation GPS:", String.format("loc:%s lat:%f long:%f alt:%f tz:%s",
+        Log.e("zcProvider GPS:", String.format("loc:%s lat:%f long:%f alt:%f tz:%s",
                 zcService.gps_info.getGeolocationName(),
                 zcService.gps_info.lat,
                 zcService.gps_info.lng,
