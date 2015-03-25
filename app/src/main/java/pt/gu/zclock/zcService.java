@@ -174,5 +174,10 @@ public final class zcService extends Service{
             }
             return _Location;
         }
+        
+        public GeoLocation geoLocation(){
+            return new GeoLocation(TimeZone.getTimeZone().toString(),
+                this.lat, this.lng, this.alt, TimeZone.getTimeZone());
+        }
     }
 }
