@@ -612,7 +612,8 @@ public class zcProvider extends AppWidgetProvider {
                 sysCalendar.getTimeZone().toString()
         ));
 
-        GeoLocation geoLocation = new GeoLocation(sysCalendar.getTimeZone().toString(),
+        geoLocation = zcService.gps_info.geoLocation();
+        //GeoLocation geoLocation = new GeoLocation(sysCalendar.getTimeZone().toString(),
                 zcService.gps_info.lat, zcService.gps_info.lng, zcService.gps_info.alt, sysCalendar.getTimeZone());
 
         alotHarHabait = new ComplexZmanimCalendar(HarHabait).getAlos72();
