@@ -105,7 +105,9 @@ public class zcProvider extends AppWidgetProvider {
         updateWidgetSize(context, appWidgetId);
 
         int cMode = getIntPref(context, "clockMode", appWidgetId);
+
         if (zmanimCalendar == null || !zcService.gps_info.act) updateLocation(context);
+
         long newday = getNewDayTime(context, appWidgetId);
 
         sysCalendar = Calendar.getInstance();
@@ -117,11 +119,15 @@ public class zcProvider extends AppWidgetProvider {
 
         if (cMode < 3) {
 
-            if (Clock == null || nday || !clockUpdated) setupClockPrefs(context, appWidgetId);
+            Log.e("Clock mode <3","");
+            if (Clock == null || nday || !clockUpdated){
+                setupClockPrefs(context, appWidgetId);
+            }
 
-            if (getBoolPref(context, "show72Hashem", appWidgetId))
+            if (getBoolPref(context, "show72Hashem", appWidgetId)) {
                 Clock.setBackgroundPicture(
                         getHashemNames(context, Clock.getPxClock(), appWidgetId, HASHEM_72, bkgDark ? 0x08ffffff : 0x08000000, 0));
+            }
 
             remoteViews.setImageViewBitmap(R.id.imageView, Clock.draw());
         }
@@ -144,9 +150,6 @@ public class zcProvider extends AppWidgetProvider {
                             context, getWidgetSizePrefs(
                                     context, appWidgetId, true),
                             appWidgetId, 0, bkgDark ? 0xffffffff : 0xff000000, bkgDark ? 0x80000000 : 0x80ffffff));
-
-        if (cMode ==6)
-
 
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
@@ -183,6 +186,7 @@ public class zcProvider extends AppWidgetProvider {
                     f = 0f;
                 }
             } catch (UnsupportedEncodingException ignored) {
+                Log.e("getHashemNames","UnsupportedEncoding");
             }
 
         } else {
@@ -612,9 +616,9 @@ public class zcProvider extends AppWidgetProvider {
                 sysCalendar.getTimeZone().toString()
         ));
 
-        geoLocation = zcService.gps_info.geoLocation();
+        GeoLocation geoLocation = zcService.gps_info.geoLocation();
         //GeoLocation geoLocation = new GeoLocation(sysCalendar.getTimeZone().toString(),
-                zcService.gps_info.lat, zcService.gps_info.lng, zcService.gps_info.alt, sysCalendar.getTimeZone());
+        //        zcService.gps_info.lat, zcService.gps_info.lng, zcService.gps_info.alt, sysCalendar.getTimeZone());
 
         alotHarHabait = new ComplexZmanimCalendar(HarHabait).getAlos72();
         zmanimCalendar = new ComplexZmanimCalendar(geoLocation);

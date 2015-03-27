@@ -16,10 +16,13 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.sourceforge.zmanim.util.GeoLocation;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by GU on 12-11-2014.
@@ -112,7 +115,7 @@ public final class zcService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("zcService.onStartCommand", "");
+        //Log.e("zcService.onStartCommand", "");
         //super.onStartCommand(intent, flags, startId);
         registerReceiver(mTimeChangedReceiver, sIntentFilter);
         return START_STICKY;
@@ -176,8 +179,9 @@ public final class zcService extends Service{
         }
         
         public GeoLocation geoLocation(){
-            return new GeoLocation(TimeZone.getTimeZone().toString(),
-                this.lat, this.lng, this.alt, TimeZone.getTimeZone());
+            String n = getGeolocationName();
+            return new GeoLocation(n,
+                this.lat, this.lng, this.alt, TimeZone.getTimeZone(n));
         }
     }
 }

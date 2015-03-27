@@ -5,7 +5,7 @@
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="900000"
     android:initialLayout="@layout/main"
-    android:widgetCategory="home_screen|keyguard"
+    android:widgetCategory="home_screen"
     android:initialKeyguardLayout="@layout/main"
-	android:previewImage="@drawable/zclock_logo_r">
-    </appwidget-provider>
+	android:configure="pt.gu.zclock.zcPreferences"
+	android:previewImage="@drawable/zclock_logo_r"/>

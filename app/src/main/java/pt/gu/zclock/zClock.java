@@ -59,8 +59,8 @@ public class zClock {
     private long    newDayTimeMilis;
     private Bitmap  backgroundBitmap=null;
     private float lineFeed = 22f;
-    private List<timeLabel> timeMarks = new ArrayList<>();
-    private List<dateLabel> Labels = new ArrayList<>();
+    private List<timeLabel> timeMarks = new ArrayList();
+    private List<dateLabel> Labels = new ArrayList();
 
     public zClock(int clockMode, long NewDayTime, PointF dpClock) {
 
@@ -190,7 +190,7 @@ public class zClock {
         //Draw timemarks
         timeMarkPaths();
         for (timeLabel z : timeMarks) {
-            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_DIP, z.size);
+            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_PX, z.size);
             tp.setColor(z.color);
             tp.setTextSize(lineFeed);
             tp.setTypeface(z.type);
@@ -202,7 +202,7 @@ public class zClock {
         //Draw Current Time
         tp.setTypeface(typeTime);
         tp.setTextAlign(Paint.Align.CENTER);
-        tp.setTextSize(applyDimension(TypedValue.COMPLEX_UNIT_DIP, szTime));
+        tp.setTextSize(applyDimension(TypedValue.COMPLEX_UNIT_PX, szTime));
         tp.setColor(cTime);
         s = new SimpleDateFormat("HH:mm").format(new Date());
         tp.getTextBounds(s, 0, s.length(), bounds);
@@ -211,7 +211,7 @@ public class zClock {
 
         //Draw Labels
         for (dateLabel t : Labels) {
-            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_DIP, t.size);
+            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_PX, t.size);
             tp.setTypeface(t.type);
             tp.setColor(t.color);
             tp.setTextSize(lineFeed);

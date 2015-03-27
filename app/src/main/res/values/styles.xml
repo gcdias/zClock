@@ -1,9 +1,9 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="">
-        <!-- Customize your theme here. -->
-    </style>
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="">
+		<!-- Customize your theme here. -->
+	</style>
 
     <style name="layout_category">
         <item name="android:layout_width">match_parent</item>

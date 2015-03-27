@@ -34,6 +34,7 @@ public class zcPreferences extends Activity implements SharedPreferences.OnShare
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.e("zcPrefs","onCreate");
         // Display the fragment as the main content.
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction mFragmentTransaction = mFragmentManager
