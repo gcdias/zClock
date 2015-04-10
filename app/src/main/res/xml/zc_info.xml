@@ -8,4 +8,4 @@
     android:widgetCategory="home_screen"
     android:initialKeyguardLayout="@layout/main"
 	android:configure="pt.gu.zclock.zcPreferences"
-	android:previewImage="@drawable/zclock_logo_r"/>
+	android:previewImage="@drawable/zmanimclock"/>

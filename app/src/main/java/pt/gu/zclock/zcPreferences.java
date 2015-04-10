@@ -70,6 +70,7 @@ public class zcPreferences extends Activity implements SharedPreferences.OnShare
 
         // If this activity was started with an intent without an app widget ID, finish with an error.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            Log.e("zcPrefs.onResume","invalid AppWidgetId");
             finish();
         }
 
@@ -109,7 +110,8 @@ public class zcPreferences extends Activity implements SharedPreferences.OnShare
         Log.e("Exit Prefs", String.valueOf(mAppWidgetId));
         zcProvider.updateClock();
         zcProvider.updateAppWidget(context, appWidgetManager, mAppWidgetId);
-        //oldcode context.startService(new Intent(zcService.ACTION_UPDATE));
+
+        //context.startService(new Intent(zcService.ACTION_UPDATE));
         context.startService(new Intent(context,zcService.class));
 
 

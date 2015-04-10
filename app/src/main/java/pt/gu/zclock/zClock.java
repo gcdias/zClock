@@ -35,7 +35,7 @@ public class zClock {
     private float   dp = Resources.getSystem().getDisplayMetrics().density;
     //private int     resx =Resources.getSystem().getDisplayMetrics().widthPixels;
     //private int     resy=Resources.getSystem().getDisplayMetrics().heightPixels;
-    private float pad = 3 * dp;
+    private float pad = 1 * dp;
     private float[] textMarksMaxWidth = new float[]{22f * dp, 0};
     private PointF  szClock,//= new PointF(294*dp,294*dp),
                     centro;// = new PointF(szClock.x / 2f, szClock.y / 2f);
@@ -247,7 +247,7 @@ public class zClock {
         float res_out = 0f, res_in = 0f;
         Paint tp = new Paint();
         for (timeLabel z : timeMarks) {
-            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_DIP, z.size);
+            lineFeed = applyDimension(TypedValue.COMPLEX_UNIT_PX, z.size);
             tp.setTypeface(z.type);
             tp.setTextSize(lineFeed);
             if (z.insideFrame)

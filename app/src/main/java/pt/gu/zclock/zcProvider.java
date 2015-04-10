@@ -51,12 +51,17 @@ public class zcProvider extends AppWidgetProvider {
     static final int    HASHEM_72       =0;
     static final int    HASHEM_72_SOF   =1;
     static final int    HASHEM_42       =2;
-    static final String[] romanNumb     ={"I","II","III","IV","V","VI","VII","VIII","IX","X"};
+    static final String[] romanNumb     ={"I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV"};
     static final String[] hebMonthsTransl = {"Nissan", "Iyar", "Sivan", "Tamuz", "Av", "Elul", "Tishri", "Mar Cheshvan",
             "Kislev", "Tevet", "Shevat", "Adar", "Adar II", "Adar I" };
+    static private final String[] hebHolTrans = { "Erev Pesach", "Pesach", "Chol Hamoed Pesach", "Pesach Sheni",
+            "Erev Shavuot", "Shavuot", "17 Tammuz", "Tishah B'Av", "Tu B'Av", "Erev Rosh Hashana",
+            "Rosh Hashana", "Jejum de Gedalyah", "Erev Yom Kippur", "Yom Kippur", "Erev Sukot", "Sukot",
+            "Chol Hamoed Sukot", "Hoshana Rabbah", "Shemini Atzeret", "Simchat Torah", "Erev Chanukah", "Chanukah",
+            "10 Tevet", "Tu B'Shvat", "Jejum de Ester", "Purim", "Shushan Purim", "Purim Katan", "Rosh Chodesh",
+            "Yom HaShoah", "Yom Hazikaron", "Yom Ha'atzmaut", "Yom Yerushalayim" };
     static final String[] parshiotTransl = {
-            "Bereshit", "Noach", "Lech-Lecha", "Vayera", "Chaye-Sarah", "Toldot",
-            "Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi",
+            "Bereshit", "Noach", "Lech-Lecha", "Vayera", "Chaye-Sarah", "Toldot","Vayetzei", "Vayishlach", "Vayeshev", "Miketz", "Vayigash", "Vayechi",
             "Shemot", "Vaera", "Bo", "Beshalach", "Yitro", "Mishpatim", "Terumah", "Tetzaveh", "Ki Tisa", "Vayakchel", "Pekude",
             "Vayikra", "Tzav", "Shemini", "Tazria", "Metzora", "Achre Mot", "Kedoshim", "Emor", "Behar", "Bechukotai",
             "Bamidbar", "Naso", "Behaalotcha", "Shelach", "Korach", "Chukat", "Balak", "Pinchas", "Matot", "Masei",
@@ -64,7 +69,10 @@ public class zcProvider extends AppWidgetProvider {
             "Vayakchel Pekude", "Tazria Metzora", "Achre Mot Kedoshim", "Behar Bechukotai", "Chukat Balak",
             "Matot Masei", "Nitzavim Vayelech"};
 
+    static final String[] omerSefirot ={"Chesed","Gevurah","Tiferet","Netzach","Hod","Yesod","Malchut"};
+
     static final GeoLocation HarHabait = new GeoLocation("Har Habait", 31.777972f, 35.235806f, 743, TimeZone.getTimeZone("Asia/Jerusalem"));
+
 
 
     public static zClock Clock;
@@ -221,9 +229,11 @@ public class zcProvider extends AppWidgetProvider {
 
         String[] currentPasuk = getCurrentPasuk(context,1);
 
+        if (currentPasuk==null) return bitmap;
+
         renderTextBlock(bitmap, tfStam, currentPasuk[0], bkgDark ? 0xa0ffffff : 0xa0000000, 28f, bitmap.getHeight() * 0.92f - 26f);
 
-        return renderTextBlock(bitmap, tfStam, currentPasuk[1], bkgDark ? 0xffffffff : 0xff000000, 42f, 0);
+        return renderTextBlock(bitmap, tfStam, currentPasuk[1], bkgDark ? 0xffffffff : 0xff000000, 50f, bitmap.getHeight() * 0.08f + 13f);
 
     }
 
@@ -280,7 +290,8 @@ public class zcProvider extends AppWidgetProvider {
         String result = (parshaNameOnly) ? "" : (inHebrew) ? ((day % 7 == 0) ? "שבת " : "פרשת השבוע ") : ((day % 7 == 0) ? "Shabbat " : "Parashat Hashavua ");
         c.add(Calendar.DATE, 7 - day);
         hebrewFormat.setHebrewFormat(inHebrew);
-        return result + hebrewFormat.formatParsha(new JewishCalendar(c.getTime()));
+        String p =hebrewFormat.formatParsha(new JewishCalendar(c.getTime()));
+        return (p == "") ? "" : result + p ;
     }
 
     static int getParshaHashavuaIndex(Calendar cal) {
@@ -433,7 +444,7 @@ public class zcProvider extends AppWidgetProvider {
         Canvas canvas = new Canvas(bitmap);
         float margin=0.9f;
 
-        Log.e("Draw Parsha", text);
+        //Log.e("Draw Parsha", text);
         float slmargin = bitmap.getWidth() * (1-margin);
         float slwidth = bitmap.getWidth() * margin;
         TextPaint p = new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -541,6 +552,7 @@ public class zcProvider extends AppWidgetProvider {
         final Typeface tfSTAM = Typeface.createFromAsset(context.getAssets(), "fonts/sefstm.ttf");
 
         boolean bHeb = getBoolPref(context, "bLangHebrew", appWidgetId);
+        hebrewFormat.setHebrewFormat(bHeb);
 
         Clock = new zClock(
                 getIntPref(context, "clockMode", appWidgetId),
@@ -561,26 +573,49 @@ public class zcProvider extends AppWidgetProvider {
 
 
         if (getBoolPref(context, "showHebDate", appWidgetId)) {
-            hebrewFormat.setHebrewFormat(bHeb);
             hebrewFormat.setTransliteratedMonthList(hebMonthsTransl);
             hebrewFormat.setTransliteratedParshiosList(parshiotTransl);
+            hebrewFormat.setTransliteratedHolidayList(hebHolTrans);
             Clock.addLabel(hebrewFormat.format(jewishCalendar),
                     getDimensPref(context, "szDate", appWidgetId),
                     getColorPref(context, "cDate", appWidgetId),
                     bHeb ? tfSTAM : tfCond,
                     getDimensPref(context, "wClockMargin", appWidgetId));
-            if (jewishCalendar.isChanukah()) {
-                Clock.addLabel(
-                        bHeb ? ("חנוכה " + jewishCalendar.getDayOfChanukah()) :
-                                "Chanukah " + romanNumb[jewishCalendar.getDayOfChanukah() - 1],
+
+            if (jewishCalendar.getDayOfOmer()>-1) {
+                int o = jewishCalendar.getDayOfOmer()-1;
+                String sep = bHeb ? hebrewFormat.getHebrewOmerPrefix() : context.getResources().getString(R.string.omerSep);
+                String omer = String.format("%s (%s %s %s)",hebrewFormat.formatOmer(jewishCalendar), omerSefirot[o%7],sep,omerSefirot[(int)(o/7)]);
+                Clock.addLabel(omer,
                         getDimensPref(context, "szParshat", appWidgetId),
                         getColorPref(context, "cParshat", appWidgetId),
                         bHeb ? tfSTAM : tfThin,
                         getDimensPref(context, "wClockMargin", appWidgetId));
             }
-            if (jewishCalendar.isRoshChodesh()) {
+
+            if (jewishCalendar.isYomTov()){
+                String yomtov =hebrewFormat.formatYomTov(jewishCalendar);
+                if (jewishCalendar.getYomTovIndex() == jewishCalendar.PESACH) yomtov += " " + romanNumb[jewishCalendar.getDayOfOmer()+1];
+                if (jewishCalendar.getYomTovIndex() == jewishCalendar.CHANUKAH) yomtov += " " + romanNumb[jewishCalendar.getDayOfChanukah()+1];
                 Clock.addLabel(
-                        bHeb ? "ראש חודש" : "Rosh Chodesh",
+                        yomtov,
+                        getDimensPref(context, "szParshat", appWidgetId),
+                        getColorPref(context, "cParshat", appWidgetId),
+                        bHeb ? tfSTAM : tfThin,
+                        getDimensPref(context, "wClockMargin", appWidgetId));
+            }
+
+            if (jewishCalendar.isErevYomTov()){
+                Clock.addLabel(
+                        bHeb ? " ערב": "Erev " + hebrewFormat.formatYomTov(jewishCalendar),
+                        getDimensPref(context, "szParshat", appWidgetId),
+                        getColorPref(context, "cParshat", appWidgetId),
+                        bHeb ? tfSTAM : tfThin,
+                        getDimensPref(context, "wClockMargin", appWidgetId));
+            }
+
+            if (jewishCalendar.isRoshChodesh()) {
+                Clock.addLabel(hebrewFormat.formatRoshChodesh(jewishCalendar),
                         getDimensPref(context, "szParshat", appWidgetId),
                         getColorPref(context, "cParshat", appWidgetId),
                         bHeb ? tfSTAM : tfThin,
@@ -638,7 +673,10 @@ public class zcProvider extends AppWidgetProvider {
         if (getBoolPref(context, "showTimeMarks", appWidgetId)) {
             Date[] timeHours = new Date[24];
             for (int i = 0; i < 24; i++) {
-                timeHours[i] = new Date(3600000 * i);
+                Date d = sysCalendar.getTime();
+                d.setHours(i);
+                d.setMinutes(0);
+                timeHours[i] = d;
             }
             Clock.addMarks(tfCondN,
                     getColorPref(context, "cTimemarks", appWidgetId),
@@ -681,7 +719,6 @@ public class zcProvider extends AppWidgetProvider {
         }
 
         Clock.changeNewDay(sunsr[0].getTime());
-        long chatzot = zmanimCalendar.getChatzos().getTime();
 
         Date d1 = (zMode == 0) ? zmanimCalendar.getTzais() : zmanimCalendar.getSunset();
         Date d2 = (zMode == 0) ? zmanimCalendar.getAlosHashachar() : zmanimCalendar.getSunrise();
@@ -696,8 +733,26 @@ public class zcProvider extends AppWidgetProvider {
                         sunsr[1],
                         d1,
                         d2,
-                        new Date(chatzot),
-                        new Date(chatzot + 43200000)});
+                        zmanimCalendar.getChatzos(),
+                        zmanimCalendar.getSolarMidnight()});
+
+        if (sysCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
+        Clock.addMarks(tfRegularB,
+                0xff800000,
+                getDimensPref(context, "szZmanim_sun", appWidgetId),
+                getStringPref(context, "tsZmanim_sun", appWidgetId),
+                getBoolPref(context, "iZmanim_sun", appWidgetId),
+                new Date[]{zmanimCalendar.getCandleLighting()});
+        }
+
+        if (sysCalendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+            Clock.addMarks(tfRegularB,
+                    0xff804000,
+                    getDimensPref(context, "szZmanim_sun", appWidgetId),
+                    getStringPref(context, "tsZmanim_sun", appWidgetId),
+                    getBoolPref(context, "iZmanim_sun", appWidgetId),
+                    new Date[]{sunsr[0]});
+        }
 
         if (getBoolPref(context, "showZmanim", appWidgetId)) {
 
@@ -741,9 +796,8 @@ public class zcProvider extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);
-        Log.e("zcProvider.onEnabled", "");
         // Enter relevant functionality for when the first widget is created
-        context.startService(new Intent(zcService.ACTION_UPDATE));
+        context.startService(new Intent(context,zcService.class));
     }
 
     @Override
@@ -756,13 +810,14 @@ public class zcProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
 
-
-        context.startService(new Intent(zcService.ACTION_UPDATE));
+        //context.startService(new Intent(zcService.ACTION_UPDATE));
+        context.startService(new Intent(context,zcService.class));
 
         //Update widgets
         updateWidgets(context, appWidgetManager, appWidgetIds);
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
+
     }
 
     @Override
@@ -788,7 +843,8 @@ public class zcProvider extends AppWidgetProvider {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
 
         //workaround for kitkat issue on START_STICKY
-        context.startService(new Intent(zcService.ACTION_UPDATE));
+        //context.startService(new Intent(zcService.ACTION_UPDATE));
+        context.startService(new Intent(context,zcService.class));
 
         //update widgets
         updateWidgetSize(context, appWidgetId);

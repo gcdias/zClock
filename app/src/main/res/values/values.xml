@@ -18,7 +18,7 @@
 	<dimen name="szZmanim_main">6dp</dimen>
 	<dimen name="szZmanimAlotTzet">6dp</dimen>
 	<dimen name="szTimemarks">5dp</dimen>
-	<dimen name="szTime">32dp</dimen>
+	<dimen name="szTime">50dp</dimen>
 	<dimen name="szDate">12dp</dimen>
 	<dimen name="szParshat">10dp</dimen>
 	<dimen name="szShemot">72dp</dimen>

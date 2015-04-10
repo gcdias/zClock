@@ -19,10 +19,10 @@ import android.widget.Toast;
 import net.sourceforge.zmanim.util.GeoLocation;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by GU on 12-11-2014.
@@ -46,6 +46,7 @@ public final class zcService extends Service{
     private boolean pmScreenOn=true;
     private ComponentName widgets;
     private AppWidgetManager manager;
+
     private final BroadcastReceiver mTimeChangedReceiver = new BroadcastReceiver() {
 
         @Override
@@ -100,6 +101,7 @@ public final class zcService extends Service{
                         PackageManager.DONT_KILL_APP);
             }
         } catch (Exception ignore) {
+        Log.e("zcService.onCreate", "packagemanager failed");
         }
 
         //Register Receiver
@@ -116,7 +118,7 @@ public final class zcService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //Log.e("zcService.onStartCommand", "");
-        //super.onStartCommand(intent, flags, startId);
+        super.onStartCommand(intent, flags, startId);
         registerReceiver(mTimeChangedReceiver, sIntentFilter);
         return START_STICKY;
     }
@@ -180,8 +182,9 @@ public final class zcService extends Service{
         
         public GeoLocation geoLocation(){
             String n = getGeolocationName();
-            return new GeoLocation(n,
-                this.lat, this.lng, this.alt, TimeZone.getTimeZone(n));
+            Calendar c = Calendar.getInstance();
+            return new GeoLocation(c.getTimeZone().getDisplayName(),
+                this.lat, this.lng, this.alt, c.getTimeZone());
         }
     }
 }
